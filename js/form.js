@@ -1,6 +1,6 @@
 // Questionnaire de contact en 5 étapes.
 // À l'envoi : un email rédigé arrive sur skynord.immo@gmail.com (via FormSubmit, sans serveur)
-// et le client reçoit un accusé de réception. L'envoi se fait en arrière-plan. Au tout premier envoi, FormSubmit envoie
+// (FormSubmit tente aussi un accusé de réception au client, non garanti). L'envoi se fait en arrière-plan. Au tout premier envoi, FormSubmit envoie
 // un email d'activation à skynord.immo@gmail.com : il faut cliquer dessus une fois.
 const TO = 'skynord.immo@gmail.com';
 const ENDPOINT = `https://formsubmit.co/ajax/${TO}`;
@@ -120,7 +120,7 @@ export function initForm() {
         'Précisions': d.precisions || '-',
       }),
     }).catch(err => console.error('Envoi du questionnaire :', err));
-    finish(`Merci ${first}, votre demande est envoyée. Vous allez recevoir une confirmation par email et je reviens vers vous rapidement.`);
+    finish(`Merci ${first}, votre demande est bien envoyée. Je reviens vers vous rapidement, par téléphone ou par email.`);
   });
 
   function finish(text) {

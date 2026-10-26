@@ -32,6 +32,8 @@ export class FlightClips {
       img.src = this.videos[0].poster;
       setTimeout(res, 2500);
     });
+    // Les images fixes de tous les plans, tout de suite : jamais de fond vide pendant un volet
+    this.videos.forEach(v => { const img = new Image(); img.src = v.poster; });
     onProgress(1);
     this.show(0, 1);
     this.preloadAll();
@@ -56,10 +58,23 @@ export class FlightClips {
     setTimeout(next, 6000); // au cas où l'événement ne vient pas (iOS)
   }
 
+  // Attend que le plan ait au moins une image à afficher (1,2 s maximum)
+  ready(v) {
+    if (v.readyState >= 2) return Promise.resolve();
+    return new Promise(res => {
+      const done = () => { clearTimeout(t); v.removeEventListener('loadeddata', done); res(); };
+      const t = setTimeout(done, 1200);
+      v.addEventListener('loadeddata', done);
+    });
+  }
+
   // dir = 1 : le plan arrive par la droite ; -1 : par la gauche
-  show(i, dir = 1) {
+  async show(i, dir = 1) {
     if (i === this.active) return;
-    const next = this.load(i), prev = this.videos[this.active];
+    const prev = this.videos[this.active], next = this.load(i);
+    this.active = i;
+    await this.ready(next);
+    if (this.active !== i) return; // un autre changement a eu lieu entre-temps
     this.load((i + 1) % this.count);
     this.videos.forEach(v => gsap.set(v, { zIndex: v === next ? 2 : v === prev ? 1 : 0 }));
     if (!this.reduced) { next.currentTime = 0; next.play().catch(() => {}); }
@@ -80,7 +95,6 @@ export class FlightClips {
         },
       });
     }
-    this.active = i;
   }
 
   telemetry() {

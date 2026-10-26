@@ -38,7 +38,10 @@ const droneCanvas = $('#droneCanvas');
 let drone, mouseX = 0, droneX = 0, impulse = 0, pulse = false, stageVisible = true;
 import('./drone.js').then(({ createDrone }) => { drone = createDrone(droneCanvas, { reduced }); }).catch(() => droneCanvas.remove());
 if (finePointer && !reduced) addEventListener('pointermove', e => { mouseX = (e.clientX / innerWidth - 0.5) * 2; });
-new IntersectionObserver(([e]) => { stageVisible = e.isIntersecting; }).observe(flightEl);
+// La visite reste collée en haut, recouverte par la suite : visible tant qu'on n'a pas scrollé d'un écran
+const readVisible = () => { stageVisible = scrollY < innerHeight * 0.9; };
+addEventListener('scroll', readVisible, { passive: true });
+readVisible();
 
 /* ---------------------------------------------------------------- slider */
 function goTo(i, { user = true } = {}) {

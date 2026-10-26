@@ -25,7 +25,7 @@ Le pack Visite Complète utilise ta vidéo « Villa avec piscine » : `visite-ex
 
 5 étapes (profil, type de bien, formule, lieu et délai, coordonnées). À l'envoi :
 - un email rédigé (résumé de la demande + chaque réponse) arrive sur **skynord.immo@gmail.com**, avec « Répondre » qui renvoie directement au client ;
-- le client reçoit un accusé de réception automatique.
+- FormSubmit tente aussi d'envoyer un accusé de réception au client, mais ce n'est pas garanti (souvent bloqué ou en spam) : le site ne le promet donc pas.
 
 L'envoi passe par FormSubmit (gratuit, sans compte). **Au tout premier envoi, FormSubmit envoie un email d'activation à skynord.immo@gmail.com : clique sur le lien une fois**, sinon les demandes suivantes ne t'arriveront pas.
 Si l'envoi échoue, la messagerie du client s'ouvre avec la demande déjà rédigée. Code : `js/form.js`.
