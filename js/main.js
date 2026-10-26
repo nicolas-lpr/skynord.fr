@@ -11,9 +11,9 @@ const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const mobile = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
 
 // Réglages de confort (voir brief, section 2)
-const LERP = 0.05;          // lissage du scroll par frame
-const MAX_FRAMES_STEP = 0.6; // avance max de la séquence par frame d'affichage
-const MAX_BLUR = 1.5;        // px
+// Réglages indépendants de la vitesse de l'écran : même ressenti sur un Mac lent ou rapide
+const SMOOTH = 9;            // lissage du scroll (plus haut = plus réactif)
+const MAX_SPEED = 2;         // avance max de la visite par seconde (1 = toute la visite)
 const AUTO_FLIGHT_S = 30;    // durée de la visite automatique complète
 
 const flightEl = $('#flight'), canvas = $('#stageCanvas');
@@ -44,7 +44,7 @@ import('./drone.js').then(({ createDrone }) => { drone = createDrone(droneCanvas
 if (finePointer && !reduced) addEventListener('pointermove', e => { mouseX = (e.clientX / innerWidth - 0.5) * 2; });
 
 /* ---------------------------------------------------------------- scroll → vol */
-let target = 0, cur = 0, blur = 0, lastBlur = -1;
+let target = 0, cur = 0;
 const flightRange = () => Math.max(1, flightEl.offsetHeight - innerHeight);
 const readTarget = () => { target = clamp((scrollY - flightEl.offsetTop) / flightRange()) || 0; };
 addEventListener('scroll', readTarget, { passive: true });
@@ -127,9 +127,10 @@ function updateHud(p, now) {
 const progressBar = $('#progressBar'), shade = $('#stageShade');
 let lastNow = 0;
 function tick(now) {
-  const maxStep = MAX_FRAMES_STEP / (engine.frames - 1);
+  const dt = Math.min(0.25, (now - (lastNow || now)) / 1000);
+  const maxStep = MAX_SPEED * dt;
   const d = target - cur;
-  let step = reduced ? d : d * LERP;
+  let step = reduced ? d : d * (1 - Math.exp(-SMOOTH * dt));
   if (!reduced) step = clamp(step, -maxStep, maxStep);
   if (Math.abs(d) < 1e-5) step = d;
   cur += step;
@@ -138,11 +139,6 @@ function tick(now) {
   if (onStage) {
     if (step !== 0) engine.setProgress(cur);
     engine.render();
-    // Flou très léger seulement quand le vol va vite, retour progressif à 0
-    const want = reduced ? 0 : MAX_BLUR * smooth(0.55, 1, Math.abs(step) / maxStep);
-    blur += (want - blur) * (want > blur ? 0.08 : 0.05);
-    const b = blur < 0.15 ? 0 : Math.round(blur * 10) / 10;
-    if (b !== lastBlur) { canvas.style.filter = b ? `blur(${b}px)` : ''; lastBlur = b; }
     progressBar.style.transform = `scaleX(${cur.toFixed(4)})`;
     shade.style.setProperty('--dark', (smooth(0.92, 1, cur) * 0.55).toFixed(3));
     updateBeats(cur);
@@ -152,7 +148,7 @@ function tick(now) {
       droneX += (mouseX * 8 - droneX) * 0.06; // parallaxe souris ±8 px
       droneCanvas.style.transform = `translate(calc(-50% + ${droneX.toFixed(2)}px), -50%)`;
       droneCanvas.style.opacity = (1 - smooth(0.93, 0.99, cur)).toFixed(2);
-      drone.update(Math.min(0.05, (now - (lastNow || now)) / 1000), step / maxStep, c !== lastChap);
+      drone.update(Math.min(0.05, dt), maxStep ? clamp(step / maxStep, -1, 1) : 0, c !== lastChap);
       lastChap = c;
     }
   }

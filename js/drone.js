@@ -8,7 +8,7 @@ const MAX_TILT = THREE.MathUtils.degToRad(5);
 
 export function createDrone(canvas, { reduced = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 

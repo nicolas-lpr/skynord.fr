@@ -8,7 +8,6 @@ export class FlightClips {
     this.el = el;
     this.base = base;
     this.reduced = reduced;
-    this.frames = 300; // sert seulement à plafonner la vitesse du scroll
     this.chapters = CLIPS.map((_, i) => i / CLIPS.length);
     this.p = 0;
     this.active = -1;
