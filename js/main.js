@@ -30,14 +30,9 @@ const setLoad = v => { bar.style.width = `${Math.round(v * 100)}%`; pct.textCont
   $('#loader').classList.add('done');
   revealHero();
   startAuto();
-  requestAnimationFrame(tick);
 })();
 
-/* ---------------------------------------------------------------- drone visible */
-const droneCanvas = $('#droneCanvas');
-let drone, mouseX = 0, droneX = 0, impulse = 0, pulse = false, stageVisible = true;
-import('./drone.js').then(({ createDrone }) => { drone = createDrone(droneCanvas, { reduced }); }).catch(() => droneCanvas.remove());
-if (finePointer && !reduced) addEventListener('pointermove', e => { mouseX = (e.clientX / innerWidth - 0.5) * 2; });
+let stageVisible = true;
 // La visite reste collée en haut, recouverte par la suite : visible tant qu'on n'a pas scrollé d'un écran
 const readVisible = () => { stageVisible = scrollY < innerHeight * 0.9; };
 addEventListener('scroll', readVisible, { passive: true });
@@ -53,7 +48,6 @@ function goTo(i, { user = true } = {}) {
   engine.show(slide, dir);
   updateBeats(slide);
   updateUi(slide);
-  impulse = dir; pulse = true;
   if (user) { stopAuto(); stopTour(); }
 }
 const next = o => goTo(slide + 1, o), prev = o => goTo(slide - 1, o);
@@ -197,22 +191,6 @@ function updateUi(i) {
   $('.hud__bl').style.opacity = i === 0 ? 0 : 1;
   counter.textContent = `${String(i + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}`;
   progressBar.style.transform = `scaleX(${(i + 1) / N})`;
-}
-
-/* ---------------------------------------------------------------- boucle (drone seulement) */
-let lastNow = 0;
-function tick(now) {
-  requestAnimationFrame(tick);
-  if (now - lastNow < 32) return; // drone rendu à 30 images/s : moitié moins de calcul
-  const dt = Math.min(0.05, (now - (lastNow || now)) / 1000);
-  lastNow = now;
-  if (drone && stageVisible) {
-    droneX += (mouseX * 8 - droneX) * 0.06; // parallaxe souris ±8 px
-    droneCanvas.style.transform = `translate(calc(-50% + ${droneX.toFixed(2)}px), -50%)`;
-    impulse *= Math.exp(-dt * 2.5); // inclinaison brève dans le sens du changement de slide
-    drone.update(dt, impulse, pulse);
-    pulse = false;
-  }
 }
 
 /* ---------------------------------------------------------------- nav, titres, micro-interactions */

@@ -70,14 +70,8 @@
   </script>
 
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=16">
+  <link rel="stylesheet" href="css/style.css?v=17">
 
-  <script type="importmap">
-  { "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-  } }
-  </script>
 </head>
 <body>
   <a class="skip" href="#prestations">Aller au contenu</a>
@@ -107,7 +101,6 @@
       <div class="stage" id="stage">
         <div id="stageCanvas" class="clips" aria-hidden="true"></div>
         <div class="stage__shade" id="stageShade"></div>
-        <canvas class="drone" id="droneCanvas" aria-hidden="true"></canvas>
 
         <!-- HUD (valeurs simulées) -->
         <div class="hud" id="hud" aria-hidden="true">
@@ -383,7 +376,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script type="module" src="js/main.js?v=16"></script>
+  <script type="module" src="js/main.js?v=17"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);

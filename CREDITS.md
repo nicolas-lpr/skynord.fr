@@ -3,7 +3,6 @@
 | Élément | Source | Licence |
 |---|---|---|
 | GSAP 3.12.5 (+ ScrollTrigger) | cdnjs.cloudflare.com | Licence standard GreenSock (gratuite) |
-| Three.js 0.160.0 | cdn.jsdelivr.net | MIT |
 | Archivo (hébergée sur le site) | Google Fonts | SIL Open Font License |
 | Villa 3D de la maquette | Modélisée en code dans `js/flight-3d.js` | Skynord |
 | Réalisations (`assets/realisations/`) | Films de Nicolas Laporterie | Skynord |
