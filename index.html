@@ -2,6 +2,13 @@
 <html lang="fr" class="no-js">
 <head>
   <meta charset="utf-8">
+  <script>document.documentElement.classList.remove('no-js')</script>
+  <style>
+    /* Écran de chargement visible dès la première image, avant même la feuille de style */
+    body { margin: 0; background: #EDF0F2; }
+    .loader { position: fixed; inset: 0; z-index: 200; background: #EDF0F2; display: grid; place-content: center; }
+  </style>
+  <noscript><style>.loader { display: none; }</style></noscript>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Skynord · Films immobiliers par drone</title>
   <meta name="description" content="Skynord réalise des films immobiliers par drone dans le Nord et le Pas-de-Calais : visite complète intérieur et extérieur, film aérien, fly-through FPV. Format vertical prêt à publier inclus.">
@@ -63,7 +70,7 @@
   </script>
 
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=14">
+  <link rel="stylesheet" href="css/style.css?v=15">
 
   <script type="importmap">
   { "imports": {
@@ -205,7 +212,7 @@
           <a class="pack__cta ul" href="#contact" data-pack="Pack Visite Complète">Demander ce pack</a>
         </div>
         <figure class="pack__media">
-          <div class="pack__frame pack__frame--v" data-play="assets/examples/visite.mp4" data-cap="Pack Visite Complète" data-vertical>
+          <div class="pack__frame pack__frame--v" data-play="assets/examples/visite.mp4" data-cap="Pack Visite Complète" data-vertical style="background-image: url(assets/examples/visite-poster.webp)">
             <video muted loop playsinline preload="none" poster="assets/examples/visite-poster.webp" data-src="assets/examples/visite-extrait.mp4"></video>
           </div>
         </figure>
@@ -219,7 +226,7 @@
           <a class="pack__cta ul" href="#contact" data-pack="Pack Mandat Exclusif">Demander ce pack</a>
         </div>
         <figure class="pack__media">
-          <div class="pack__frame" data-play="assets/examples/aerien.mp4" data-cap="Pack Mandat Exclusif">
+          <div class="pack__frame" data-play="assets/examples/aerien.mp4" data-cap="Pack Mandat Exclusif" style="background-image: url(assets/examples/aerien-poster.webp)">
             <video muted loop playsinline preload="none" poster="assets/examples/aerien-poster.webp" data-src="assets/examples/aerien.mp4"></video>
           </div>
         </figure>
@@ -233,7 +240,7 @@
           <a class="pack__cta ul" href="#contact" data-pack="Fly-through Intérieur">Demander ce pack</a>
         </div>
         <figure class="pack__media">
-          <div class="pack__frame" data-play="assets/examples/flythrough.mp4" data-cap="Fly-through Intérieur">
+          <div class="pack__frame" data-play="assets/examples/flythrough.mp4" data-cap="Fly-through Intérieur" style="background-image: url(assets/examples/flythrough-poster.webp)">
             <video muted loop playsinline preload="none" poster="assets/examples/flythrough-poster.webp" data-src="assets/examples/flythrough.mp4"></video>
           </div>
         </figure>
@@ -378,7 +385,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script type="module" src="js/main.js?v=14"></script>
+  <script type="module" src="js/main.js?v=15"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);
