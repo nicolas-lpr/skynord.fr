@@ -10,14 +10,6 @@ const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 const AUTO_S = 7; // défilement automatique tant que le visiteur n'a pas touché au slider
 
-// Défilement adouci à la molette et au trackpad (le tactile garde le défilement natif)
-if (!reduced && window.Lenis) {
-  const lenis = new Lenis({ lerp: 0.09, anchors: true, gestureOrientation: 'vertical' });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-}
-
 const flightEl = $('#flight'), canvas = $('#stageCanvas');
 const engine = new FlightClips(canvas, { reduced });
 const N = engine.count;
@@ -210,6 +202,8 @@ function updateUi(i) {
 /* ---------------------------------------------------------------- boucle (drone seulement) */
 let lastNow = 0;
 function tick(now) {
+  requestAnimationFrame(tick);
+  if (now - lastNow < 32) return; // drone rendu à 30 images/s : moitié moins de calcul
   const dt = Math.min(0.05, (now - (lastNow || now)) / 1000);
   lastNow = now;
   if (drone && stageVisible) {
@@ -219,7 +213,6 @@ function tick(now) {
     drone.update(dt, impulse, pulse);
     pulse = false;
   }
-  requestAnimationFrame(tick);
 }
 
 /* ---------------------------------------------------------------- nav, titres, micro-interactions */
@@ -229,6 +222,8 @@ if (!reduced) {
     .to(flightEl, { scale: 0.9, yPercent: -6, borderRadius: 32, '--cover': 0.6, ease: 'none' }, 0)
     .fromTo('#prestations', { borderTopLeftRadius: 48, borderTopRightRadius: 48 }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, ease: 'none' }, 0);
 }
+
+if (!reduced) gsap.fromTo('#prestations .section__head .h2', { '--bar': 0 }, { '--bar': 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: '#prestations .section__head', start: 'top 80%' } });
 
 const nav = $('#nav');
 ScrollTrigger.create({ start: () => flightEl.offsetHeight - 70, onToggle: s => nav.classList.toggle('solid', s.isActive) });
@@ -243,12 +238,6 @@ if (!reduced) {
 }
 
 if (finePointer && !reduced) {
-  const cursor = $('#cursor');
-  const cx = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3' });
-  const cy = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3' });
-  addEventListener('pointermove', e => { cursor.classList.add('on'); cx(e.clientX); cy(e.clientY); });
-  document.addEventListener('pointerover', e => cursor.classList.toggle('big', !!e.target.closest('a, button, .work, .pack__frame, input, select, textarea')));
-
   document.querySelectorAll('.magnetic').forEach(btn => {
     const mx = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3' });
     const my = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3' });

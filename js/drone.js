@@ -8,7 +8,7 @@ const MAX_TILT = THREE.MathUtils.degToRad(5);
 
 export function createDrone(canvas, { reduced = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setPixelRatio(1); // résolution simple : le drone reste net à cette taille et coûte peu
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -23,7 +23,7 @@ export function createDrone(canvas, { reduced = false } = {}) {
   sun.position.set(2, 4, 3);
   scene.add(sun, new THREE.HemisphereLight(0xdfe8ff, 0x30302c, 0.6));
 
-  const shell = new THREE.MeshPhysicalMaterial({ color: 0xeceff2, roughness: 0.32, clearcoat: 0.8, clearcoatRoughness: 0.2 });
+  const shell = new THREE.MeshStandardMaterial({ color: 0xeceff2, roughness: 0.3, metalness: 0.05 });
   const graphite = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.4 });
   const blade = new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.5, transparent: true, opacity: 0.85 });
   const blur = new THREE.MeshBasicMaterial({ color: 0xd7dde4, transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide });

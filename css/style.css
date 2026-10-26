@@ -27,9 +27,6 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-stopped { overflow: hidden; }
 html { -webkit-text-size-adjust: 100%; scrollbar-color: #9AA4AF var(--bg); overscroll-behavior-x: none; }
 body {
   margin: 0;
@@ -86,10 +83,6 @@ p { margin: 0; }
 .btn--ghost::after { background: var(--on); }
 .btn--ghost:hover { color: var(--ink); }
 
-.cursor { position: fixed; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1px solid var(--accent-ink); border-radius: 50%; pointer-events: none; z-index: 90; opacity: 0; mix-blend-mode: difference; transition: width .3s, height .3s, margin .3s, background .3s, opacity .3s; }
-.cursor.on { opacity: 1; }
-.cursor.big { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgba(201,169,110,.15); }
-@media (hover: none), (pointer: coarse) { .cursor { display: none; } }
 
 /* Chargement */
 .loader { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: grid; place-content: center; justify-items: center; gap: 18px; transition: opacity .9s var(--ease), visibility .9s; }
@@ -101,7 +94,7 @@ p { margin: 0; }
 
 /* Navigation : blanche sur la vidéo, encre sur fond clair */
 .nav { position: fixed; inset: 0 0 auto; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px var(--gutter); color: var(--on); transition: background .4s, color .4s, box-shadow .4s; }
-.nav.solid { background: rgba(237,240,242,.86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--ink); box-shadow: 0 1px 0 var(--line); }
+.nav.solid { background: rgba(237,240,242,.97); color: var(--ink); box-shadow: 0 1px 0 var(--line); }
 .nav__logo { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-stretch: 125%; font-weight: 800; letter-spacing: .18em; font-size: 13px; min-height: 44px; }
 .nav__logo img { width: 36px; height: 28px; object-fit: contain; transition: filter .4s; }
 .nav.solid .nav__logo img { filter: invert(1) brightness(.35); }
@@ -126,7 +119,7 @@ p { margin: 0; }
 }
 .stage__shade::after { content: ""; position: absolute; inset: 0; background: var(--bg); opacity: var(--dark, 0); }
 
-.drone { position: absolute; left: 50%; top: 58%; width: clamp(240px, 30vw, 460px); aspect-ratio: 3 / 2; transform: translate(-50%, -50%); pointer-events: none; filter: drop-shadow(0 18px 24px rgba(0,0,0,.28)); transition: opacity .8s var(--ease); will-change: transform; }
+.drone { position: absolute; left: 50%; top: 58%; width: clamp(240px, 30vw, 460px); aspect-ratio: 3 / 2; transform: translate(-50%, -50%); pointer-events: none; transition: opacity .8s var(--ease); }
 @media (max-width: 720px) { .drone { top: 50%; width: 62vw; } }
 
 /* HUD : mesures simulées, chiffres à chasse fixe dans la police du site */
@@ -166,8 +159,9 @@ p { margin: 0; }
 @media (max-width: 900px) { .rail { display: none; } }
 
 .slider-ui { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: 14px; color: var(--on); }
-.sl-btn { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; border: 0; background: rgba(255,255,255,.14); color: var(--on); cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: background .3s, color .3s, transform .4s var(--ease); }
-.sl-btn:hover { background: var(--accent); color: var(--ink); }
+.sl-btn { width: 48px; height: 48px; display: grid; place-items: center; border: 0; background: none; color: var(--on); cursor: pointer; transition: color .3s, transform .4s var(--ease); }
+.sl-btn svg { filter: drop-shadow(0 1px 4px rgba(0,0,0,.45)); }
+.sl-btn:hover { color: var(--accent); }
 .sl-btn:active { transform: scale(.94); }
 .sl-count { font: 600 12px/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: .12em; min-width: 64px; text-align: center; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
 .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255,255,255,.25); }
@@ -230,6 +224,8 @@ a.stat__src { text-decoration: underline; text-decoration-color: rgba(86,96,109,
 /* ============ SECTIONS ============ */
 .section { position: relative; z-index: 6; background: var(--bg); padding: clamp(96px, 13vw, 170px) var(--gutter); }
 .section__head { max-width: 1100px; margin-bottom: clamp(48px, 7vw, 96px); }
+/* gros trait champagne sous « Trois façons de faire visiter » */
+.prestations .section__head .h2::after { content: ""; display: block; width: clamp(96px, 12vw, 160px); height: 8px; margin-top: 28px; border-radius: 4px; background: var(--accent); transform-origin: left; transform: scaleX(var(--bar, 1)); }
 .h2 { font-size: clamp(38px, 6.4vw, 100px); line-height: .92; }
 .section__lead { margin-top: 26px; color: var(--mute); max-width: 52ch; font-size: 17px; }
 
