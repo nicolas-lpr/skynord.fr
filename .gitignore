@@ -1,0 +1,7 @@
+# Sources lourdes et fichiers de travail : ne pas mettre en ligne
+sources/
+tools/.cache/
+.claude/
+.vercel/
+*.zip
+.DS_Store

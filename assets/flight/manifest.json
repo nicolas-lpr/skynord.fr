@@ -1,0 +1,54 @@
+{
+  "frames": 591,
+  "fps": 12,
+  "duration": 49.26,
+  "landscape": {
+    "pattern": "landscape/%04d.webp",
+    "width": 1920,
+    "height": 1080
+  },
+  "portrait": {
+    "pattern": "portrait/%04d.webp",
+    "width": 1080,
+    "height": 1920
+  },
+  "chapters": [
+    0,
+    0.4356,
+    0.6009,
+    0.7479,
+    0.8861
+  ],
+  "telemetry": [
+    {
+      "t": 0,
+      "alt": 4,
+      "hdg": 200
+    },
+    {
+      "t": 0.4356,
+      "alt": 1.6,
+      "hdg": 200
+    },
+    {
+      "t": 0.6009,
+      "alt": 1.4,
+      "hdg": 200
+    },
+    {
+      "t": 0.7479,
+      "alt": 2.2,
+      "hdg": 200
+    },
+    {
+      "t": 0.8861,
+      "alt": 5,
+      "hdg": 200
+    },
+    {
+      "t": 1,
+      "alt": 6,
+      "hdg": 205
+    }
+  ]
+}

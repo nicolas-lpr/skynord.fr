@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="fr" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skynord · Vidéo drone immobilier · Nord &amp; Pas-de-Calais</title>
+  <meta name="description" content="Skynord réalise des films par drone pour l'immobilier dans le Nord (59) et le Pas-de-Calais (62) : vues aériennes, fly-through intérieur et reels verticaux, livrés en 48 h.">
+  <meta name="theme-color" content="#EDF0F2">
+  <link rel="canonical" href="https://skynord.fr/">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Skynord · Vendez plus vite grâce au drone">
+  <meta property="og:description" content="Films par drone pour l'immobilier, Nord et Pas-de-Calais.">
+  <meta property="og:url" content="https://skynord.fr/">
+  <meta property="og:image" content="https://skynord.fr/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Skynord",
+    "description": "Vidéo par drone pour l'immobilier : vues aériennes, fly-through intérieur, reels verticaux.",
+    "url": "https://skynord.fr",
+    "email": "Skynord.immo@gmail.com",
+    "telephone": "+33650539932",
+    "founder": { "@type": "Person", "name": "Nicolas Laporterie" },
+    "areaServed": [
+      { "@type": "AdministrativeArea", "name": "Nord (59)" },
+      { "@type": "AdministrativeArea", "name": "Pas-de-Calais (62)" }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#prestations">Aller au contenu</a>
+
+  <!-- Écran de chargement -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <video class="loader__anim" src="assets/logo-anim-light.mp4" autoplay muted playsinline preload="auto"></video>
+    <div class="loader__bar"><span id="loaderBar"></span></div>
+    <div class="loader__pct" id="loaderPct">Préparation du vol</div>
+  </div>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__logo" aria-label="Skynord, retour en haut">
+      <img src="assets/logo-mark.png" alt="" width="36" height="28">
+      <span>SKYNORD</span>
+    </a>
+    <nav aria-label="Navigation principale">
+      <a href="#prestations" class="ul">Prestations</a>
+      <a href="#contact" class="btn btn--sm magnetic">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- ============ VOL ============ -->
+    <section class="flight" id="flight" aria-label="Visite de la villa par drone">
+      <div class="stage" id="stage">
+        <canvas id="stageCanvas" aria-hidden="true"></canvas>
+        <div class="stage__shade" id="stageShade"></div>
+        <canvas class="drone" id="droneCanvas" aria-hidden="true"></canvas>
+
+        <!-- HUD (valeurs simulées) -->
+        <div class="hud" id="hud" aria-hidden="true">
+          <div class="hud__tl">
+            <span class="rec"><i></i>REC</span>
+            <span id="hudTime">00:00:00</span>
+          </div>
+          <div class="hud__tr">
+            <span id="hudZone">APPROCHE</span>
+            <span class="hud__chap"><b id="hudChap">01</b>/05</span>
+          </div>
+          <div class="hud__bl">
+            <span>ALT <b id="hudAlt">000</b> m</span>
+            <span>VIT <b id="hudSpd">0.0</b> m/s</span>
+            <span>CAP <b id="hudHdg">000</b>°</span>
+          </div>
+          <div class="hud__br">
+            <span id="hudGps">50.4300 N · 2.8300 E</span>
+            <span class="hud__sig"><i></i><i></i><i></i><i></i> <b id="hudBat">98</b>%</span>
+            <span class="hud__sim">Données simulées</span>
+          </div>
+          <div class="reticle"><i></i><i></i><i></i><i></i></div>
+        </div>
+
+        <!-- Rail des espaces -->
+        <ol class="rail" id="rail" aria-hidden="true">
+          <li data-c="0">Approche</li><li data-c="1">Entrée</li><li data-c="2">Séjour</li><li data-c="3">Terrasse</li><li data-c="4">Envol</li>
+        </ol>
+
+        <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+      </div>
+
+      <!-- Contenus qui défilent au-dessus de la scène -->
+      <div class="beats">
+        <div class="beat beat--hero" data-from="0" data-to="0.075">
+          <h1 class="hero__title display"><span class="mask"><span>Vendez plus vite</span></span><span class="mask"><span>grâce au drone</span></span></h1>
+          <p class="hero__lead">Des films aériens et intérieurs qui font visiter un bien avant même la première visite.</p>
+          <div class="hero__cta">
+            <button class="btn magnetic" id="autoFly" type="button">Explorer la villa</button>
+            <span class="hint">ou faites défiler</span>
+          </div>
+        </div>
+
+        <div class="beat beat--left" data-from="0.33" data-to="0.5">
+          <article class="panel">
+            <span class="corners"></span>
+            <h2>Valorisation des volumes &amp; de la luminosité</h2>
+            <p>Un plan séquence lent révèle la hauteur sous plafond, la lumière naturelle et l'enchaînement des pièces, comme si l'acheteur marchait dedans.</p>
+            <div class="stat">
+              <span class="stat__num">jusqu'à <b data-count="68">0</b>&nbsp;%</span>
+              <span class="stat__label">plus vite : délai de vente constaté pour les biens présentés avec des images aériennes.</span>
+              <a class="stat__src" href="https://www.digitalcameraworld.com/news/aerial-real-estate-is-quick-drone-photos-will-help-sell-a-home-68-faster-says-study" target="_blank" rel="noopener">Étude américaine relayée par Digital Camera World, fév. 2024 · marché US, échantillon non précisé</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="beat beat--right" data-from="0.58" data-to="0.74">
+          <article class="panel">
+            <span class="corners"></span>
+            <h2>Captation 4K &amp; trajectoires FPV fluides</h2>
+            <p class="quote">« Offrez à vos acheteurs une expérience immersive avant la première visite. »</p>
+            <div class="stat">
+              <span class="stat__num"><b data-count="403" data-prefix="+">0</b>&nbsp;%</span>
+              <span class="stat__label">de demandes pour les annonces accompagnées d'une vidéo.</span>
+              <span class="stat__src">Même source, même réserve</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="beat beat--end" data-from="0.86" data-to="1.01">
+          <h2 class="end__title display">Le bien, et tout ce qui l'entoure.</h2>
+          <p>Terrain, quartier, vue, accès : le drone donne l'échelle que les photos ne montrent pas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRESTATIONS ============ -->
+    <section class="section prestations" id="prestations">
+      <header class="section__head">
+        <h2 class="h2 display"><span class="mask"><span>Trois façons</span></span><span class="mask"><span>de faire visiter.</span></span></h2>
+      </header>
+
+      <article class="pack pack--featured">
+        <div class="pack__text">
+          <h3 class="display">Pack Visite Complète</h3>
+          <p class="pack__badge">Formule recommandée</p>
+          <p>La maison entière, dehors comme dedans, dans un seul film : des prises de vue extérieures, puis chaque pièce filmée en plans stabilisés.</p>
+          <ul class="pack__list">
+            <li>Extérieur : façade, jardin, abords</li>
+            <li>Intérieur : toutes les pièces, plan par plan</li>
+            <li>Livré monté, en horizontal et en vertical 9:16</li>
+          </ul>
+          <p class="pack__gear">Filmé à l'iPhone 17 Pro Max sur stabilisateur DJI Osmo Mobile 8</p>
+          <a class="pack__cta ul" href="#contact" data-pack="Pack Visite Complète">Demander ce pack</a>
+        </div>
+        <figure class="pack__media">
+          <div class="pack__frame pack__frame--v" data-play="assets/examples/visite.mp4" data-cap="Pack Visite Complète" data-vertical>
+            <video muted loop playsinline preload="none" poster="assets/examples/visite-poster.webp" data-src="assets/examples/visite-extrait.mp4"></video>
+          </div>
+        </figure>
+      </article>
+
+      <article class="pack pack--rev">
+        <div class="pack__text">
+          <h3 class="display">Pack Mandat Exclusif</h3>
+          <p>Extérieur, terrain et environnement du bien réunis dans un film aérien qui situe la propriété et en donne l'échelle.</p>
+          <p class="pack__gear">Filmé au DJI Mini 5 Pro</p>
+          <a class="pack__cta ul" href="#contact" data-pack="Pack Mandat Exclusif">Demander ce pack</a>
+        </div>
+        <figure class="pack__media">
+          <div class="pack__frame" data-play="assets/examples/aerien.mp4" data-cap="Pack Mandat Exclusif">
+            <video muted loop playsinline preload="none" poster="assets/examples/aerien-poster.webp" data-src="assets/examples/aerien.mp4"></video>
+          </div>
+        </figure>
+      </article>
+
+      <article class="pack">
+        <div class="pack__text">
+          <h3 class="display">Fly-through Intérieur</h3>
+          <p>Un plan séquence fluide qui traverse les pièces une à une : l'acheteur visite avant de se déplacer.</p>
+          <p class="pack__gear">Filmé au DJI Avata 2 (FPV)</p>
+          <a class="pack__cta ul" href="#contact" data-pack="Fly-through Intérieur">Demander ce pack</a>
+        </div>
+        <figure class="pack__media">
+          <div class="pack__frame" data-play="assets/examples/flythrough.mp4" data-cap="Fly-through Intérieur">
+            <video muted loop playsinline preload="none" poster="assets/examples/flythrough-poster.webp" data-src="assets/examples/flythrough.mp4"></video>
+          </div>
+        </figure>
+      </article>
+
+      <ul class="band" aria-label="Engagements">
+        <li>Format vertical 9:16 monté et prêt à publier, inclus dans chaque pack</li>
+        <li>Vols conformes à la réglementation DGAC</li>
+        <li>Pilote professionnel</li>
+        <li>Livraison en 48 h</li>
+        <li>Budget sur devis selon la surface et les options</li>
+      </ul>
+
+      <div class="zones">
+        <div class="zones__dep"><b>59</b><span>Nord</span></div>
+        <div class="zones__dep"><b>62</b><span>Pas-de-Calais</span></div>
+        <div class="zones__txt">
+          <p>J'interviens dans tout le Nord et le Pas-de-Calais. Autres régions sur demande.</p>
+          <p class="muted">Pour les agences, les particuliers, les locations saisonnières (Airbnb), les hôtels et tout propriétaire.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="section contact" id="contact">
+      <div class="contact__grid">
+        <div class="contact__side">
+          <h2 class="h2 display"><span class="mask"><span>Contact</span></span></h2>
+          <p class="contact__lead">Cinq questions, moins d'une minute. Je reviens vers vous avec une proposition adaptée à votre bien.</p>
+          <p class="about">Nicolas Laporterie, 24 ans. Deux ans dans le monde du luxe pour apprendre l'exigence de l'image, appliquée aujourd'hui à l'immobilier.</p>
+          <ul class="coords">
+            <li><a class="ul" href="mailto:Skynord.immo@gmail.com">Skynord.immo@gmail.com</a></li>
+            <li><a class="ul" href="tel:+33650539932">06 50 53 99 32</a></li>
+          </ul>
+        </div>
+
+        <form class="quiz" id="quiz" novalidate>
+          <div class="quiz__bar" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+
+          <fieldset class="step" data-step="1">
+            <legend><span class="step__count">1 / 5</span>Vous êtes…</legend>
+            <div class="choices" data-required>
+              <label class="choice"><input type="radio" name="profil" value="Agence immobilière"><span>Agence immobilière</span></label>
+              <label class="choice"><input type="radio" name="profil" value="Particulier"><span>Particulier</span></label>
+              <label class="choice"><input type="radio" name="profil" value="Location saisonnière"><span>Location saisonnière</span></label>
+              <label class="choice"><input type="radio" name="profil" value="Hôtel ou gîte"><span>Hôtel ou gîte</span></label>
+              <label class="choice"><input type="radio" name="profil" value="Promoteur ou constructeur"><span>Promoteur ou constructeur</span></label>
+              <label class="choice"><input type="radio" name="profil" value="Autre"><span>Autre</span></label>
+            </div>
+            <em class="err">Choisissez une réponse.</em>
+            <label class="field other" hidden><span>Précisez</span><input name="profil_autre" placeholder="ex. notaire, architecte…"></label>
+          </fieldset>
+
+          <fieldset class="step" data-step="2" hidden>
+            <legend><span class="step__count">2 / 5</span>Pour quel bien ?</legend>
+            <div class="choices" data-required>
+              <label class="choice"><input type="radio" name="bien" value="Maison"><span>Maison</span></label>
+              <label class="choice"><input type="radio" name="bien" value="Appartement"><span>Appartement</span></label>
+              <label class="choice"><input type="radio" name="bien" value="Villa"><span>Villa</span></label>
+              <label class="choice"><input type="radio" name="bien" value="Terrain"><span>Terrain</span></label>
+              <label class="choice"><input type="radio" name="bien" value="Local commercial"><span>Local commercial</span></label>
+              <label class="choice"><input type="radio" name="bien" value="Autre"><span>Autre</span></label>
+            </div>
+            <em class="err">Choisissez une réponse.</em>
+            <label class="field other" hidden><span>Précisez</span><input name="bien_autre" placeholder="ex. château, immeuble, gîte…"></label>
+          </fieldset>
+
+          <fieldset class="step" data-step="3" hidden>
+            <legend><span class="step__count">3 / 5</span>Quelle formule vous intéresse ?</legend>
+            <div class="choices" data-required>
+              <label class="choice"><input type="radio" name="formule" value="Pack Visite Complète"><span>Pack Visite Complète</span></label>
+              <label class="choice"><input type="radio" name="formule" value="Pack Mandat Exclusif"><span>Pack Mandat Exclusif</span></label>
+              <label class="choice"><input type="radio" name="formule" value="Fly-through Intérieur"><span>Fly-through Intérieur</span></label>
+              <label class="choice"><input type="radio" name="formule" value="Je ne sais pas encore"><span>Je ne sais pas encore</span></label>
+            </div>
+            <em class="err">Choisissez une réponse.</em>
+          </fieldset>
+
+          <fieldset class="step" data-step="4" hidden>
+            <legend><span class="step__count">4 / 5</span>Où, et pour quand ?</legend>
+            <div class="fields">
+              <div class="f2">
+                <label class="field"><span>Ville ou code postal *</span><input name="lieu" required autocomplete="address-level2" placeholder="ex. Lille, 62200…"><em class="err">Indiquez la ville du bien.</em></label>
+                <label class="field"><span>Surface approximative</span><input name="surface" inputmode="numeric" placeholder="ex. 140 m²"></label>
+              </div>
+              <div class="choices" data-required>
+              <label class="choice"><input type="radio" name="delai" value="Dès que possible"><span>Dès que possible</span></label>
+              <label class="choice"><input type="radio" name="delai" value="Sous 2 semaines"><span>Sous 2 semaines</span></label>
+              <label class="choice"><input type="radio" name="delai" value="Dans le mois"><span>Dans le mois</span></label>
+              <label class="choice"><input type="radio" name="delai" value="Pas encore fixé"><span>Pas encore fixé</span></label>
+              </div>
+              <em class="err">Choisissez un délai.</em>
+            </div>
+          </fieldset>
+
+          <fieldset class="step" data-step="5" hidden>
+            <legend><span class="step__count">5 / 5</span>Vos coordonnées</legend>
+            <div class="fields">
+              <div class="f2">
+                <label class="field"><span>Nom et prénom *</span><input name="nom" required autocomplete="name"><em class="err">Indiquez votre nom.</em></label>
+                <label class="field" data-pro hidden><span>Agence ou société</span><input name="societe" autocomplete="organization"></label>
+              </div>
+              <div class="f2">
+                <label class="field"><span>Email *</span><input name="email" type="email" required autocomplete="email"><em class="err">Adresse email invalide.</em></label>
+                <label class="field"><span>Téléphone *</span><input name="tel" type="tel" required autocomplete="tel"><em class="err">Indiquez un numéro pour vous rappeler.</em></label>
+              </div>
+              <label class="field"><span>Précisions (facultatif)</span><textarea name="precisions" rows="3" placeholder="Accès, date de mise en vente, pièces à mettre en avant…"></textarea></label>
+              <label class="check"><input type="checkbox" name="rgpd" required><span>J'accepte que ces informations soient utilisées pour répondre à ma demande. <a class="ul" href="mentions-legales.html#confidentialite">Confidentialité</a></span></label>
+            </div>
+          </fieldset>
+
+          <div class="quiz__nav">
+            <button class="btn magnetic" type="submit" id="quizNext">Continuer</button>
+            <button class="quiz__back" type="button" id="quizBack" hidden>Retour</button>
+          </div>
+
+          <div class="quiz__done" id="quizDone" hidden aria-live="polite">
+            <h3 class="display">Merci, c'est envoyé.</h3>
+            <p id="quizDoneText">Vous allez recevoir une confirmation par email. Je reviens vers vous rapidement.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© 2026 Skynord</span>
+    <span>SIRET : à compléter</span>
+    <a class="ul" href="mentions-legales.html">Mentions légales &amp; confidentialité</a>
+  </footer>
+
+  <!-- Lecteur vidéo plein écran -->
+  <dialog class="player" id="player" aria-label="Lecteur vidéo">
+    <button class="player__close" type="button" aria-label="Fermer">×</button>
+    <video id="playerVideo" controls playsinline preload="metadata"></video>
+    <p class="player__cap" id="playerCap"></p>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
