@@ -34,6 +34,8 @@ export class FlightClips {
     });
     // Les images fixes de tous les plans, tout de suite : jamais de fond vide pendant un volet
     this.videos.forEach(v => { const img = new Image(); img.src = v.poster; });
+    // et la première en fond du bloc, au cas où la vidéo met du temps à démarrer
+    this.el.style.background = `#1a2027 url("${this.videos[0].poster}") center / cover no-repeat`;
     onProgress(1);
     this.show(0, 1);
     this.preloadAll();
@@ -73,8 +75,10 @@ export class FlightClips {
     if (i === this.active) return;
     const prev = this.videos[this.active], next = this.load(i);
     this.active = i;
-    await this.ready(next);
-    if (this.active !== i) return; // un autre changement a eu lieu entre-temps
+    if (prev) { // le tout premier plan s'affiche aussitôt (son image fixe), sans attendre la vidéo
+      await this.ready(next);
+      if (this.active !== i) return; // un autre changement a eu lieu entre-temps
+    }
     this.load((i + 1) % this.count);
     this.videos.forEach(v => gsap.set(v, { zIndex: v === next ? 2 : v === prev ? 1 : 0 }));
     if (!this.reduced) { next.currentTime = 0; next.play().catch(() => {}); }
