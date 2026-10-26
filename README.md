@@ -10,22 +10,11 @@ python3 -m http.server 8765
 
 Puis ouvrir http://localhost:8765 (un serveur est nécessaire : les modules JS ne marchent pas en `file://`).
 
-## Le vol
+## La visite (haut de page)
 
-- **Sans vidéo** (`assets/flight/manifest.json` contient `"frames": 0`) : le vol se fait dans une villa 3D temps réel (maquette).
-- **Avec tes vidéos** : dépose les 5 plans dans `assets/clips/` (`01-approche.mp4` … `05-remontee.mp4`), puis :
+Cinq courts plans en boucle dans `assets/visite/` (approche, entrée, intérieur, piscine, vue), une version ordinateur (`.mp4`) et une version téléphone recadrée en 9:16 (`-m.mp4`), chacune avec son image fixe (`.webp`). Au scroll, les plans s'enchaînent en fondu ; seuls le plan affiché et le suivant se chargent.
 
-```bash
-python3 tools/prepare_videos.py flight
-```
-
-Le script assemble les plans avec des fondus, étalonne légèrement, puis génère :
-- `assets/flight/landscape/` : images 1920 px (WebP qualité 82, 15 img/s) pour ordinateur ;
-- `assets/flight/portrait/` : images 9:16 recadrées depuis la source pleine définition pour téléphone ;
-- `manifest.json` : nombre d'images et début de chaque plan (les textes se calent dessus).
-
-Options utiles : `--width 2560` (écrans 5K), `--quality 88`, `--fps 20`, `--xfade 0.8`.
-Fournis des sources **4K** si possible : la version téléphone est recadrée dedans, donc plus la source est grande, plus elle est nette.
+Pour remplacer un plan par une de tes vidéos : encode-la en 1920 px de large (et une version 1080×1920 pour le téléphone) sous le même nom.
 
 ## Exemples des packs
 

@@ -1,5 +1,6 @@
 import { clamp, smooth } from './util.js';
 import { initForm } from './form.js';
+import { FlightClips } from './flight-clips.js';
 
 document.documentElement.classList.remove('no-js');
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -13,7 +14,7 @@ const mobile = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
 const LERP = 0.05;          // lissage du scroll par frame
 const MAX_FRAMES_STEP = 0.6; // avance max de la séquence par frame d'affichage
 const MAX_BLUR = 1.5;        // px
-const AUTO_FLIGHT_S = 52;    // durée du vol automatique complet
+const AUTO_FLIGHT_S = 30;    // durée de la visite automatique complète
 
 const flightEl = $('#flight'), canvas = $('#stageCanvas');
 let engine;
@@ -22,25 +23,14 @@ let engine;
 const bar = $('#loaderBar'), pct = $('#loaderPct');
 const setLoad = v => { bar.style.width = `${Math.round(v * 100)}%`; pct.textContent = v < 1 ? `Préparation du vol · ${Math.round(v * 100)} %` : 'Décollage'; };
 
-async function createEngine() {
-  try {
-    const res = await fetch('assets/flight/manifest.json', { cache: 'no-cache' });
-    const manifest = res.ok ? await res.json() : null;
-    if (manifest?.frames > 0) {
-      const { FlightFrames } = await import('./flight-frames.js');
-      return new FlightFrames(canvas, manifest, 'assets/flight/');
-    }
-  } catch { /* pas de séquence : maquette 3D */ }
-  const { Flight3D } = await import('./flight-3d.js');
-  return new Flight3D(canvas, { mobile });
-}
+engine = new FlightClips(canvas, { reduced });
 
 (async () => {
-  const minShow = new Promise(r => setTimeout(r, reduced ? 0 : 3000)); // laisse l'animation du logo se terminer
-  engine = await createEngine();
+  await null; // laisse le module finir de s'initialiser
+  setupBeats(); // les textes ne dépendent plus du chargement des vidéos
+  const minShow = new Promise(r => setTimeout(r, reduced ? 0 : 1800));
   await engine.init(setLoad);
   setLoad(1);
-  setupBeats();
   await minShow;
   $('#loader').classList.add('done');
   revealHero();
@@ -66,7 +56,7 @@ const rail = $('#rail'), hudLeft = $('.hud__bl');
 function setupBeats() {
   const ch = engine.chapters;
   const ranges = [
-    [0, Math.min(0.075, ch[1] * 0.4)],
+    [0, ch[1] * 0.6],
     [ch[2] - 0.01, ch[3] - 0.05],
     [ch[3] + 0.01, ch[4] - 0.02],
     [ch[4] + 0.02, 1.01],
