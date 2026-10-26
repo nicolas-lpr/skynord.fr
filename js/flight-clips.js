@@ -1,8 +1,8 @@
 // Visite en « slides » : un court plan vidéo par espace, en boucle.
 // Le passage d'un plan à l'autre est un fondu minuté (et non lié au scroll) :
 // il reste fluide même quand le scroll est saccadé, sur téléphone comme sur ordinateur.
-const CLIPS = ['approche', 'entree', 'interieur', 'piscine', 'vue'];
-const ALT = [4, 1.6, 1.4, 2.2, 5]; // altitudes indicatives (HUD, données simulées)
+const CLIPS = ['approche', 'interieur', 'piscine', 'vue'];
+const ALT = [4, 1.4, 2.2, 5]; // altitudes indicatives (HUD, données simulées)
 
 export class FlightClips {
   constructor(el, { base = 'assets/visite/', reduced = false } = {}) {

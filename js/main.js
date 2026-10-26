@@ -54,9 +54,9 @@ readTarget();
 let railItems = [...document.querySelectorAll('.rail li')];
 const rail = $('#rail'), hudLeft = $('.hud__bl');
 
-// Un texte par slide : accueil, (entrée sans texte), séjour, terrasse, envol.
+// Un texte par slide : accueil, séjour, terrasse, envol.
 // Les textes changent en fondu minuté : fluide même si le scroll est saccadé.
-const BEAT_OF_CHAPTER = [0, -1, 1, 2, 3];
+const BEAT_OF_CHAPTER = [0, 1, 2, 3];
 let beats = [], currentBeat = -1;
 function setupBeats() {
   beats = [...document.querySelectorAll('.beat')];
@@ -94,7 +94,7 @@ function enterBeat(el) {
 
 // Aimantation : quand on arrête de scroller, la page se cale sur la slide la plus proche
 if (!reduced) {
-  const n = 5, points = [0, ...Array.from({ length: n - 1 }, (_, i) => (i + 1.5) / n), 1];
+  const n = engine.chapters.length, points = [0, ...Array.from({ length: n - 1 }, (_, i) => (i + 1.5) / n), 1];
   ScrollTrigger.create({
     trigger: flightEl, start: 'top top', end: 'bottom bottom',
     snap: { snapTo: points, duration: { min: 0.35, max: 0.8 }, delay: 0.12, ease: 'power2.inOut' },
@@ -112,7 +112,7 @@ const hud = {
   el: $('#hud'), time: $('#hudTime'), zone: $('#hudZone'), chap: $('#hudChap'),
   alt: $('#hudAlt'), spd: $('#hudSpd'), hdg: $('#hudHdg'), gps: $('#hudGps'), bat: $('#hudBat'),
 };
-const ZONES = ['APPROCHE', 'ENTRÉE', 'SÉJOUR', 'TERRASSE', 'ENVOL'];
+const ZONES = ['APPROCHE', 'SÉJOUR', 'TERRASSE', 'ENVOL'];
 let lastHud = 0, prevP = 0, speed = 0;
 function updateHud(p, now) {
   if (now - lastHud < 100) return;
