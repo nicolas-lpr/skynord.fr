@@ -30,7 +30,7 @@ export class FlightClips {
       const img = new Image();
       img.onload = img.onerror = res;
       img.src = this.videos[0].poster;
-      setTimeout(res, 2500);
+      setTimeout(res, 1500);
     });
     // Les images fixes de tous les plans, tout de suite : jamais de fond vide pendant un volet
     this.videos.forEach(v => { const img = new Image(); img.src = v.poster; });
@@ -89,10 +89,10 @@ export class FlightClips {
     } else {
       const from = dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)';
       gsap.fromTo(next, { opacity: 1, clipPath: from, scale: 1.08 },
-        { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.1, ease: 'power3.inOut', overwrite: true,
+        { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 0.85, ease: 'power3.inOut', overwrite: true,
           onComplete: () => this.videos.forEach(v => { if (v !== this.videos[this.active]) { gsap.set(v, { opacity: 0, xPercent: 0 }); v.pause(); } }) });
       gsap.to(prev, {
-        xPercent: -4 * dir, duration: 1.1, ease: 'power3.inOut', overwrite: true,
+        xPercent: -4 * dir, duration: 0.85, ease: 'power3.inOut', overwrite: true,
         onComplete: () => {
           gsap.set(prev, { xPercent: 0 });
           if (prev !== this.videos[this.active]) { gsap.set(prev, { opacity: 0 }); prev.pause(); }

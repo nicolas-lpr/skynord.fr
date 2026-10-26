@@ -10,6 +10,14 @@ const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 const AUTO_S = 7; // défilement automatique tant que le visiteur n'a pas touché au slider
 
+// Défilement adouci à la molette et au trackpad (le tactile garde le défilement natif)
+if (!reduced && window.Lenis) {
+  const lenis = new Lenis({ lerp: 0.09, anchors: true, gestureOrientation: 'vertical' });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
 const flightEl = $('#flight'), canvas = $('#stageCanvas');
 const engine = new FlightClips(canvas, { reduced });
 const N = engine.count;
@@ -23,7 +31,7 @@ const setLoad = v => { bar.style.width = `${Math.round(v * 100)}%`; pct.textCont
   await null; // laisse le module finir de s'initialiser
   setupBeats();
   updateUi(0);
-  const minShow = new Promise(r => setTimeout(r, reduced ? 0 : 1800));
+  const minShow = new Promise(r => setTimeout(r, reduced ? 0 : 900));
   try { await engine.init(setLoad); } catch (e) { console.error(e); }
   setLoad(1);
   await minShow;
@@ -215,6 +223,13 @@ function tick(now) {
 }
 
 /* ---------------------------------------------------------------- nav, titres, micro-interactions */
+// Rideau : en descendant, la visite recule et s'assombrit pendant que les prestations montent par-dessus
+if (!reduced) {
+  gsap.timeline({ scrollTrigger: { trigger: '#prestations', start: 'top bottom', end: 'top top', scrub: 0.6 } })
+    .to(flightEl, { scale: 0.9, yPercent: -6, borderRadius: 32, '--cover': 0.6, ease: 'none' }, 0)
+    .fromTo('#prestations', { borderTopLeftRadius: 48, borderTopRightRadius: 48 }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, ease: 'none' }, 0);
+}
+
 const nav = $('#nav');
 ScrollTrigger.create({ start: () => flightEl.offsetHeight - 70, onToggle: s => nav.classList.toggle('solid', s.isActive) });
 
