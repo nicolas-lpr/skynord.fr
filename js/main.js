@@ -29,7 +29,7 @@ engine = new FlightClips(canvas, { reduced });
   await null; // laisse le module finir de s'initialiser
   setupBeats(); // les textes ne dépendent plus du chargement des vidéos
   const minShow = new Promise(r => setTimeout(r, reduced ? 0 : 1800));
-  await engine.init(setLoad);
+  try { await engine.init(setLoad); } catch (e) { console.error(e); }
   setLoad(1);
   await minShow;
   $('#loader').classList.add('done');

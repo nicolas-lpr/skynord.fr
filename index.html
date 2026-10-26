@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Skynord · Vidéo drone immobilier · Nord &amp; Pas-de-Calais</title>
+  <title>Skynord · Films immobiliers par drone</title>
   <meta name="description" content="Skynord réalise des films par drone pour l'immobilier dans le Nord (59) et le Pas-de-Calais (62) : vues aériennes, fly-through intérieur et reels verticaux, livrés en 48 h.">
   <meta name="theme-color" content="#EDF0F2">
   <link rel="canonical" href="https://skynord.fr/">
@@ -14,6 +14,8 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Skynord · Vendez plus vite grâce au drone">
+  <meta property="og:site_name" content="Skynord">
+  <meta name="apple-mobile-web-app-title" content="Skynord">
   <meta property="og:description" content="Films par drone pour l'immobilier, Nord et Pas-de-Calais.">
   <meta property="og:url" content="https://skynord.fr/">
   <meta property="og:image" content="https://skynord.fr/assets/og.jpg">
@@ -42,7 +44,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=3">
 
   <script type="importmap">
   { "imports": {
@@ -349,6 +351,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=3"></script>
+  <script>
+    // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
+    setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);
+  </script>
 </body>
 </html>
