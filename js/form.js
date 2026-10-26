@@ -1,6 +1,6 @@
 // Questionnaire de contact en 5 étapes.
 // À l'envoi : un email rédigé arrive sur skynord.immo@gmail.com (via FormSubmit, sans serveur)
-// et le client reçoit un accusé de réception. Au tout premier envoi, FormSubmit envoie
+// et le client reçoit un accusé de réception. L'envoi se fait en arrière-plan. Au tout premier envoi, FormSubmit envoie
 // un email d'activation à skynord.immo@gmail.com : il faut cliquer dessus une fois.
 const TO = 'skynord.immo@gmail.com';
 const ENDPOINT = `https://formsubmit.co/ajax/${TO}`;
@@ -95,39 +95,32 @@ export function initForm() {
       d.precisions ? `Précisions du client : « ${d.precisions} »` : 'Pas de précision supplémentaire.',
     ].join('\n\n');
 
-    next.disabled = true;
-    next.textContent = 'Envoi…';
-    try {
-      const r = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          _subject: `Nouvelle demande · ${d.profil} · ${d.bien} · ${d.lieu}`,
-          _template: 'box',
-          _replyto: d.email,
-          _autoresponse: `Bonjour ${first},\n\nMerci pour votre demande de tournage pour votre bien à ${d.lieu} (${d.formule}). Je l'étudie et je reviens vers vous rapidement.\n\nNicolas, Skynord\n06 50 53 99 32`,
-          'Demande': resume,
-          'Profil': d.profil,
-          'Bien': d.bien,
-          'Surface': d.surface || 'non précisée',
-          'Lieu': d.lieu,
-          'Formule': d.formule,
-          'Délai': d.delai,
-          'Nom': d.nom,
-          'Société': d.societe || '-',
-          email: d.email,
-          'Téléphone': d.tel,
-          'Précisions': d.precisions || '-',
-        }),
-      });
-      const json = await r.json().catch(() => ({}));
-      if (!r.ok || json.success === 'false' || json.success === false) throw new Error(json.message || 'envoi');
-      finish(`Merci ${first}, votre demande est bien partie. Vous allez recevoir une confirmation par email, je reviens vers vous rapidement.`);
-    } catch {
-      // Secours : la messagerie du client s'ouvre avec la demande déjà rédigée
-      location.href = `mailto:${TO}?subject=${encodeURIComponent(`Demande de tournage · ${d.bien} · ${d.lieu}`)}&body=${encodeURIComponent(resume)}`;
-      finish(`Merci ${first} ! L'envoi automatique n'a pas abouti : votre messagerie s'ouvre avec la demande déjà rédigée, il ne reste qu'à l'envoyer.`);
-    }
+    // Envoi en arrière-plan : le client voit tout de suite la confirmation,
+    // sans attendre la réponse du service ni ouvrir sa messagerie.
+    fetch(ENDPOINT, {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        _subject: `Nouvelle demande · ${d.profil} · ${d.bien} · ${d.lieu}`,
+        _template: 'box',
+        _replyto: d.email,
+        _autoresponse: `Bonjour ${first},\n\nMerci pour votre demande de tournage pour votre bien à ${d.lieu} (${d.formule}). Je l'étudie et je reviens vers vous rapidement.\n\nNicolas, Skynord\n06 50 53 99 32`,
+        'Demande': resume,
+        'Profil': d.profil,
+        'Bien': d.bien,
+        'Surface': d.surface || 'non précisée',
+        'Lieu': d.lieu,
+        'Formule': d.formule,
+        'Délai': d.delai,
+        'Nom': d.nom,
+        'Société': d.societe || '-',
+        email: d.email,
+        'Téléphone': d.tel,
+        'Précisions': d.precisions || '-',
+      }),
+    }).catch(err => console.error('Envoi du questionnaire :', err));
+    finish(`Merci ${first}, votre demande est envoyée. Vous allez recevoir une confirmation par email et je reviens vers vous rapidement.`);
   });
 
   function finish(text) {

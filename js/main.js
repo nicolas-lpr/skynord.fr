@@ -60,26 +60,49 @@ $('#slPrev').addEventListener('click', () => prev());
 document.querySelectorAll('.rail button').forEach((b, i) => b.addEventListener('click', () => goTo(i)));
 $('#autoFly').addEventListener('click', () => next());
 
-// Glisser au doigt ou à la souris (le scroll vertical reste libre : touch-action: pan-y)
+// Glisser vers la gauche ou la droite : doigt, souris ou trackpad.
+// Les écouteurs sont sur toute la zone (textes compris) ; le scroll vertical reste libre.
 {
-  let x0 = null, y0 = 0;
-  const stage = $('#stage');
-  stage.addEventListener('pointerdown', e => { if (e.target.closest('a, button')) return; x0 = e.clientX; y0 = e.clientY; });
-  stage.addEventListener('pointerup', e => {
-    if (x0 === null) return;
-    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) (dx < 0 ? next : prev)();
+  const zone = flightEl;
+  const ignore = t => t.closest('a, button, input, textarea, select');
+
+  // Doigt (iPhone, Android)
+  let tx = null, ty = 0, horizontal = false;
+  zone.addEventListener('touchstart', e => {
+    if (ignore(e.target) || e.touches.length > 1) { tx = null; return; }
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY; horizontal = false;
+  }, { passive: true });
+  zone.addEventListener('touchmove', e => {
+    if (tx === null) return;
+    const dx = e.touches[0].clientX - tx, dy = e.touches[0].clientY - ty;
+    if (!horizontal && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) horizontal = true;
+    if (horizontal) e.preventDefault(); // geste horizontal : la page ne bouge pas
+  }, { passive: false });
+  zone.addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx; tx = null;
+    if (horizontal && Math.abs(dx) > 40) (dx < 0 ? next : prev)();
   });
-  stage.addEventListener('pointercancel', () => { x0 = null; });
-  // Trackpad : seul un geste nettement horizontal change de slide
-  let lock = 0;
-  stage.addEventListener('wheel', e => {
-    if (Math.abs(e.deltaX) < 25 || Math.abs(e.deltaX) < Math.abs(e.deltaY) * 1.5) return;
+
+  // Souris (glisser-cliquer sur ordinateur)
+  let mx = null, my = 0;
+  zone.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || ignore(e.target)) return; mx = e.clientX; my = e.clientY; });
+  addEventListener('pointerup', e => {
+    if (mx === null) return;
+    const dx = e.clientX - mx, dy = e.clientY - my; mx = null;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.2) (dx < 0 ? next : prev)();
+  });
+
+  // Trackpad : un geste horizontal = une slide, même avec l'inertie
+  let acc = 0, locked = false, idle;
+  zone.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // geste vertical : scroll normal
     e.preventDefault();
-    const now = performance.now();
-    if (now < lock) return;
-    lock = now + 900;
-    (e.deltaX > 0 ? next : prev)();
+    clearTimeout(idle);
+    idle = setTimeout(() => { locked = false; acc = 0; }, 220); // fin du geste
+    if (locked) return;
+    acc += e.deltaX;
+    if (Math.abs(acc) > 50) { locked = true; (acc > 0 ? next : prev)(); acc = 0; }
   }, { passive: false });
 }
 addEventListener('keydown', e => {
