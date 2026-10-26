@@ -54,14 +54,14 @@ function goTo(i, { user = true } = {}) {
   updateBeats(slide);
   updateUi(slide);
   impulse = dir; pulse = true;
-  if (user) stopAuto();
+  if (user) { stopAuto(); stopTour(); }
 }
 const next = o => goTo(slide + 1, o), prev = o => goTo(slide - 1, o);
 
 $('#slNext').addEventListener('click', () => next());
 $('#slPrev').addEventListener('click', () => prev());
 document.querySelectorAll('.rail button').forEach((b, i) => b.addEventListener('click', () => goTo(i)));
-$('#autoFly').addEventListener('click', () => next());
+$('#autoFly').addEventListener('click', () => startTour());
 
 // Glisser vers la gauche ou la droite : doigt, souris ou trackpad.
 // Les écouteurs sont sur toute la zone (textes compris) ; le scroll vertical reste libre.
@@ -117,6 +117,19 @@ addEventListener('keydown', e => {
 let autoTimer = null;
 function startAuto() { if (!reduced) { stopAuto(); autoTimer = setInterval(() => { if (stageVisible && !document.hidden) next({ user: false }); }, AUTO_S * 1000); } }
 function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+
+// « Explorer la villa » : visite guidée rapide de tous les espaces, puis arrêt sur le dernier
+const TOUR_S = 3;
+let tourTimer = null;
+function startTour() {
+  stopAuto(); stopTour();
+  goTo(slide === N - 1 ? 0 : slide + 1, { user: false });
+  tourTimer = setInterval(() => {
+    if (slide >= N - 1) return stopTour();
+    next({ user: false });
+  }, TOUR_S * 1000);
+}
+function stopTour() { clearInterval(tourTimer); tourTimer = null; }
 
 /* ---------------------------------------------------------------- textes par slide */
 let beats = [], currentBeat = -1;
