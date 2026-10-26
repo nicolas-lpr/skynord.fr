@@ -1,62 +1,98 @@
-import { clamp, smooth } from './util.js';
 import { initForm } from './form.js';
 import { FlightClips } from './flight-clips.js';
 
 document.documentElement.classList.remove('no-js');
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
 const $ = s => document.querySelector(s);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
-const mobile = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
 
-// Réglages de confort (voir brief, section 2)
-// Réglages indépendants de la vitesse de l'écran : même ressenti sur un Mac lent ou rapide
-const SMOOTH = 9;            // lissage du scroll (plus haut = plus réactif)
-const MAX_SPEED = 2;         // avance max de la visite par seconde (1 = toute la visite)
-const AUTO_FLIGHT_S = 30;    // durée de la visite automatique complète
+const AUTO_S = 7; // défilement automatique tant que le visiteur n'a pas touché au slider
 
 const flightEl = $('#flight'), canvas = $('#stageCanvas');
-let engine;
+const engine = new FlightClips(canvas, { reduced });
+const N = engine.count;
+let slide = 0;
 
 /* ---------------------------------------------------------------- chargement */
 const bar = $('#loaderBar'), pct = $('#loaderPct');
 const setLoad = v => { bar.style.width = `${Math.round(v * 100)}%`; pct.textContent = v < 1 ? `Préparation du vol · ${Math.round(v * 100)} %` : 'Décollage'; };
 
-engine = new FlightClips(canvas, { reduced });
-
 (async () => {
   await null; // laisse le module finir de s'initialiser
-  setupBeats(); // les textes ne dépendent plus du chargement des vidéos
+  setupBeats();
+  updateUi(0);
   const minShow = new Promise(r => setTimeout(r, reduced ? 0 : 1800));
   try { await engine.init(setLoad); } catch (e) { console.error(e); }
   setLoad(1);
   await minShow;
   $('#loader').classList.add('done');
   revealHero();
+  startAuto();
   requestAnimationFrame(tick);
 })();
 
 /* ---------------------------------------------------------------- drone visible */
 const droneCanvas = $('#droneCanvas');
-let drone, lastChap = 0, mouseX = 0, droneX = 0;
+let drone, mouseX = 0, droneX = 0, impulse = 0, pulse = false, stageVisible = true;
 import('./drone.js').then(({ createDrone }) => { drone = createDrone(droneCanvas, { reduced }); }).catch(() => droneCanvas.remove());
 if (finePointer && !reduced) addEventListener('pointermove', e => { mouseX = (e.clientX / innerWidth - 0.5) * 2; });
+new IntersectionObserver(([e]) => { stageVisible = e.isIntersecting; }).observe(flightEl);
 
-/* ---------------------------------------------------------------- scroll → vol */
-let target = 0, cur = 0;
-const flightRange = () => Math.max(1, flightEl.offsetHeight - innerHeight);
-const readTarget = () => { target = clamp((scrollY - flightEl.offsetTop) / flightRange()) || 0; };
-addEventListener('scroll', readTarget, { passive: true });
-addEventListener('resize', () => { readTarget(); engine?.resize(); });
-readTarget();
+/* ---------------------------------------------------------------- slider */
+function goTo(i, { user = true } = {}) {
+  const target = (i + N) % N;
+  if (target === slide) return;
+  // sens du volet : vers l'avant sauf retour explicite (ou passage de la dernière à la première)
+  const dir = (i > slide) ? 1 : -1;
+  slide = target;
+  engine.show(slide, dir);
+  updateBeats(slide);
+  updateUi(slide);
+  impulse = dir; pulse = true;
+  if (user) stopAuto();
+}
+const next = o => goTo(slide + 1, o), prev = o => goTo(slide - 1, o);
 
-let railItems = [...document.querySelectorAll('.rail li')];
-const rail = $('#rail'), hudLeft = $('.hud__bl');
+$('#slNext').addEventListener('click', () => next());
+$('#slPrev').addEventListener('click', () => prev());
+document.querySelectorAll('.rail button').forEach((b, i) => b.addEventListener('click', () => goTo(i)));
+$('#autoFly').addEventListener('click', () => next());
 
-// Un texte par slide : accueil, séjour, terrasse, envol.
-// Les textes changent en fondu minuté : fluide même si le scroll est saccadé.
-const BEAT_OF_CHAPTER = [0, 1, 2, 3];
+// Glisser au doigt ou à la souris (le scroll vertical reste libre : touch-action: pan-y)
+{
+  let x0 = null, y0 = 0;
+  const stage = $('#stage');
+  stage.addEventListener('pointerdown', e => { if (e.target.closest('a, button')) return; x0 = e.clientX; y0 = e.clientY; });
+  stage.addEventListener('pointerup', e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) (dx < 0 ? next : prev)();
+  });
+  stage.addEventListener('pointercancel', () => { x0 = null; });
+  // Trackpad : seul un geste nettement horizontal change de slide
+  let lock = 0;
+  stage.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) < 25 || Math.abs(e.deltaX) < Math.abs(e.deltaY) * 1.5) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now < lock) return;
+    lock = now + 900;
+    (e.deltaX > 0 ? next : prev)();
+  }, { passive: false });
+}
+addEventListener('keydown', e => {
+  if (!stageVisible || e.target.closest('input, textarea, select')) return;
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'ArrowLeft') prev();
+});
+
+let autoTimer = null;
+function startAuto() { if (!reduced) { stopAuto(); autoTimer = setInterval(() => { if (stageVisible && !document.hidden) next({ user: false }); }, AUTO_S * 1000); } }
+function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+
+/* ---------------------------------------------------------------- textes par slide */
 let beats = [], currentBeat = -1;
 function setupBeats() {
   beats = [...document.querySelectorAll('.beat')];
@@ -65,39 +101,28 @@ function setupBeats() {
   currentBeat = 0;
 }
 
-function updateBeats(p) {
-  const n = engine.chapters.length;
-  const b = BEAT_OF_CHAPTER[Math.min(n - 1, Math.floor(p * n + 1e-6))];
+function updateBeats(b) {
   if (b === currentBeat) return;
-  const prev = beats[currentBeat], next = beats[b];
-  if (prev) {
-    prev.classList.remove('on');
-    gsap.to(prev, { autoAlpha: 0, duration: reduced ? 0 : 0.45, ease: 'power2.out', overwrite: true });
+  const prevB = beats[currentBeat], nextB = beats[b];
+  if (prevB) {
+    prevB.classList.remove('on');
+    gsap.to(prevB, { autoAlpha: 0, duration: reduced ? 0 : 0.45, ease: 'power2.out', overwrite: true });
   }
-  if (next) {
-    next.classList.add('on');
-    gsap.to(next, { autoAlpha: 1, duration: reduced ? 0 : 0.8, delay: reduced ? 0 : 0.3, ease: 'power2.out', overwrite: true });
-    if (b > 0) enterBeat(next);
+  if (nextB) {
+    nextB.classList.add('on');
+    gsap.to(nextB, { autoAlpha: 1, duration: reduced ? 0 : 0.8, delay: reduced ? 0 : 0.4, ease: 'power2.out', overwrite: true });
+    enterBeat(nextB);
   }
   currentBeat = b;
 }
 
 function enterBeat(el) {
-  const els = el.querySelectorAll('.panel, h2, p');
-  if (!reduced) gsap.fromTo(els, { y: 24 }, { y: 0, duration: 1.1, delay: 0.3, ease: 'power3.out', stagger: 0.06, overwrite: true });
+  const els = el.querySelectorAll('.panel, h1, h2, p, .hero__cta');
+  if (!reduced) gsap.fromTo(els, { x: 30 }, { x: 0, duration: 1.1, delay: 0.4, ease: 'power3.out', stagger: 0.06, overwrite: true });
   el.querySelectorAll('[data-count]').forEach(n => {
     const to = +n.dataset.count, pre = n.dataset.prefix || '', o = { v: 0 };
     if (reduced) { n.textContent = pre + to; return; }
-    gsap.to(o, { v: to, duration: 1.8, delay: 0.3, ease: 'power2.out', onUpdate: () => { n.textContent = pre + Math.round(o.v); } });
-  });
-}
-
-// Aimantation : quand on arrête de scroller, la page se cale sur la slide la plus proche
-if (!reduced) {
-  const n = engine.chapters.length, points = [0, ...Array.from({ length: n - 1 }, (_, i) => (i + 1.5) / n), 1];
-  ScrollTrigger.create({
-    trigger: flightEl, start: 'top top', end: 'bottom bottom',
-    snap: { snapTo: points, duration: { min: 0.35, max: 0.8 }, delay: 0.12, ease: 'power2.inOut' },
+    gsap.to(o, { v: to, duration: 1.8, delay: 0.4, ease: 'power2.out', onUpdate: () => { n.textContent = pre + Math.round(o.v); } });
   });
 }
 
@@ -107,81 +132,52 @@ function revealHero() {
   gsap.from('.hero__lead, .hero__cta', { opacity: 0, y: 18, duration: 1.2, ease: 'power3.out', stagger: 0.1, delay: 0.35 });
 }
 
-/* ---------------------------------------------------------------- HUD (10 Hz max) */
+/* ---------------------------------------------------------------- HUD et commandes */
 const hud = {
-  el: $('#hud'), time: $('#hudTime'), zone: $('#hudZone'), chap: $('#hudChap'),
+  time: $('#hudTime'), zone: $('#hudZone'), chap: $('#hudChap'),
   alt: $('#hudAlt'), spd: $('#hudSpd'), hdg: $('#hudHdg'), gps: $('#hudGps'), bat: $('#hudBat'),
 };
 const ZONES = ['APPROCHE', 'SÉJOUR', 'TERRASSE', 'ENVOL'];
-let lastHud = 0, prevP = 0, speed = 0;
-function updateHud(p, now) {
-  if (now - lastHud < 100) return;
-  const dt = (now - lastHud) / 1000; lastHud = now;
-  const t = engine.telemetry();
-  const ch = engine.chapters; let c = 0; while (c < ch.length - 1 && p >= ch[c + 1]) c++;
-  const secs = p * 42;
-  // ~300 m de trajectoire sur l'ensemble du vol
-  speed += (Math.min(14, Math.abs(cur - prevP) * 300 / dt) - speed) * 0.35;
-  prevP = cur;
-  hud.time.textContent = `00:${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(Math.floor(secs % 60)).padStart(2, '0')}`;
-  hud.zone.textContent = ZONES[c];
-  hud.chap.textContent = String(c + 1).padStart(2, '0');
-  hud.alt.textContent = String(Math.max(0, Math.round(t.alt))).padStart(3, '0');
-  hud.hdg.textContent = String(Math.round((t.heading + 360) % 360)).padStart(3, '0');
-  hud.spd.textContent = speed.toFixed(1);
-  hud.bat.textContent = Math.round(98 - p * 9);
-  hud.gps.textContent = `${(50.43 + p * 0.0004).toFixed(4)} N · ${(2.83 - p * 0.0003).toFixed(4)} E`;
-  railItems.forEach((li, i) => li.classList.toggle('on', i === c));
-  rail.style.opacity = hudLeft.style.opacity = smooth(0.16, 0.2, p).toFixed(2); // libère le titre d'accueil
-  hud.el.style.opacity = (1 - smooth(0.95, 1, p)).toFixed(2);
+const SPEED = [3.2, 1.4, 2.1, 4.6];
+const railItems = [...document.querySelectorAll('.rail li')];
+const progressBar = $('#progressBar'), counter = $('#slCount');
+function updateUi(i) {
+  const t = { alt: [4, 1.4, 2.2, 5][i], heading: 195 + i * 4 }; // données simulées
+  const secs = 6 + i * 11;
+  hud.time.textContent = `00:00:${String(secs).padStart(2, '0')}`;
+  hud.zone.textContent = ZONES[i];
+  hud.chap.textContent = String(i + 1).padStart(2, '0');
+  hud.alt.textContent = String(Math.round(t.alt)).padStart(3, '0');
+  hud.hdg.textContent = String(t.heading).padStart(3, '0');
+  hud.spd.textContent = SPEED[i].toFixed(1);
+  hud.bat.textContent = 98 - i * 2;
+  hud.gps.textContent = `${(50.43 + i * 0.0001).toFixed(4)} N · ${(2.83 - i * 0.0001).toFixed(4)} E`;
+  railItems.forEach((li, k) => li.classList.toggle('on', k === i));
+  // sur l'accueil, le rail et les mesures laissent la place au titre
+  $('#rail').classList.toggle('off', i === 0);
+  $('.hud__bl').style.opacity = i === 0 ? 0 : 1;
+  counter.textContent = `${String(i + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}`;
+  progressBar.style.transform = `scaleX(${(i + 1) / N})`;
 }
 
-/* ---------------------------------------------------------------- boucle */
-const progressBar = $('#progressBar'), shade = $('#stageShade');
+/* ---------------------------------------------------------------- boucle (drone seulement) */
 let lastNow = 0;
 function tick(now) {
-  const dt = Math.min(0.25, (now - (lastNow || now)) / 1000);
-  const maxStep = MAX_SPEED * dt;
-  const d = target - cur;
-  let step = reduced ? d : d * (1 - Math.exp(-SMOOTH * dt));
-  if (!reduced) step = clamp(step, -maxStep, maxStep);
-  if (Math.abs(d) < 1e-5) step = d;
-  cur += step;
-
-  const onStage = scrollY < flightEl.offsetTop + flightEl.offsetHeight;
-  if (onStage) {
-    if (step !== 0) engine.setProgress(cur);
-    engine.render();
-    progressBar.style.transform = `scaleX(${cur.toFixed(4)})`;
-    shade.style.setProperty('--dark', (smooth(0.92, 1, cur) * 0.55).toFixed(3));
-    updateBeats(cur);
-    updateHud(cur, now);
-    if (drone) {
-      const ch = engine.chapters; let c = 0; while (c < ch.length - 1 && cur >= ch[c + 1]) c++;
-      droneX += (mouseX * 8 - droneX) * 0.06; // parallaxe souris ±8 px
-      droneCanvas.style.transform = `translate(calc(-50% + ${droneX.toFixed(2)}px), -50%)`;
-      droneCanvas.style.opacity = (1 - smooth(0.93, 0.99, cur)).toFixed(2);
-      drone.update(Math.min(0.05, dt), maxStep ? clamp(step / maxStep, -1, 1) : 0, c !== lastChap);
-      lastChap = c;
-    }
-  }
+  const dt = Math.min(0.05, (now - (lastNow || now)) / 1000);
   lastNow = now;
+  if (drone && stageVisible) {
+    droneX += (mouseX * 8 - droneX) * 0.06; // parallaxe souris ±8 px
+    droneCanvas.style.transform = `translate(calc(-50% + ${droneX.toFixed(2)}px), -50%)`;
+    impulse *= Math.exp(-dt * 2.5); // inclinaison brève dans le sens du changement de slide
+    drone.update(dt, impulse, pulse);
+    pulse = false;
+  }
   requestAnimationFrame(tick);
 }
 
-/* ---------------------------------------------------------------- vol automatique */
-let auto;
-$('#autoFly').addEventListener('click', () => {
-  const end = flightEl.offsetTop + flightRange() * 0.995;
-  const remaining = 1 - target;
-  auto = gsap.to(window, { scrollTo: { y: end, autoKill: true }, duration: reduced ? 0 : AUTO_FLIGHT_S * remaining, ease: 'none' });
-});
-const stopAuto = () => { if (auto?.isActive()) auto.kill(); };
-['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(e => addEventListener(e, ev => { if (ev.target.id !== 'autoFly') stopAuto(); }, { passive: true }));
-
 /* ---------------------------------------------------------------- nav, titres, micro-interactions */
 const nav = $('#nav');
-ScrollTrigger.create({ start: () => flightEl.offsetTop + flightRange() - 10, onToggle: s => nav.classList.toggle('solid', s.isActive) });
+ScrollTrigger.create({ start: () => flightEl.offsetHeight - 70, onToggle: s => nav.classList.toggle('solid', s.isActive) });
 
 if (!reduced) {
   document.querySelectorAll('.section .mask > span').forEach(el => {
@@ -246,9 +242,6 @@ document.querySelectorAll('.pack__frame').forEach(frame => {
 
 initForm();
 
-// Outil de test : saute directement à une position du vol (ex. skynordJump(0.4))
-window.skynordJump = p => {
-  scrollTo(0, flightEl.offsetTop + p * flightRange());
-  readTarget(); cur = target; engine.setProgress(cur); engine.render();
-  updateBeats(cur); lastHud = 0; updateHud(cur, performance.now());
-};
+
+// Outil de test : aller directement à une slide (ex. skynordGo(2))
+window.skynordGo = i => goTo(i);

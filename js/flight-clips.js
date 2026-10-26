@@ -1,6 +1,6 @@
-// Visite en « slides » : un court plan vidéo par espace, en boucle.
-// Le passage d'un plan à l'autre est un fondu minuté (et non lié au scroll) :
-// il reste fluide même quand le scroll est saccadé, sur téléphone comme sur ordinateur.
+// Visite en slider horizontal : un court plan vidéo par espace, en boucle.
+// Changement de slide = volet horizontal minuté (le nouveau plan glisse depuis la droite),
+// indépendant du scroll : fluide sur téléphone comme sur ordinateur.
 const CLIPS = ['approche', 'interieur', 'piscine', 'vue'];
 const ALT = [4, 1.4, 2.2, 5]; // altitudes indicatives (HUD, données simulées)
 
@@ -9,8 +9,7 @@ export class FlightClips {
     this.el = el;
     this.base = base;
     this.reduced = reduced;
-    this.chapters = CLIPS.map((_, i) => i / CLIPS.length);
-    this.p = 0;
+    this.count = CLIPS.length;
     this.active = -1;
   }
 
@@ -34,7 +33,7 @@ export class FlightClips {
       setTimeout(res, 2500);
     });
     onProgress(1);
-    this.setProgress(0);
+    this.show(0, 1);
     this.preloadAll();
   }
 
@@ -44,7 +43,7 @@ export class FlightClips {
     return v;
   }
 
-  // Une fois le premier plan prêt, les suivants se chargent un par un (≈ 9 Mo au total)
+  // Une fois le premier plan prêt, les suivants se chargent un par un (≈ 7 Mo au total)
   preloadAll() {
     let k = 1;
     const next = () => {
@@ -57,34 +56,32 @@ export class FlightClips {
     setTimeout(next, 6000); // au cas où l'événement ne vient pas (iOS)
   }
 
-  activate(i) {
+  // dir = 1 : le plan arrive par la droite ; -1 : par la gauche
+  show(i, dir = 1) {
     if (i === this.active) return;
-    const dur = this.reduced ? 0 : 1;
-    const next = this.load(i);
-    this.load(i + 1);
-    this.videos.forEach(v => gsap.set(v, { zIndex: v === next ? 2 : 1 }));
+    const next = this.load(i), prev = this.videos[this.active];
+    this.load((i + 1) % this.count);
+    this.videos.forEach(v => gsap.set(v, { zIndex: v === next ? 2 : v === prev ? 1 : 0 }));
     if (!this.reduced) { next.currentTime = 0; next.play().catch(() => {}); }
-    gsap.fromTo(next, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: dur * 1.2, ease: 'power2.out', overwrite: true });
-    // Efface tous les autres plans encore visibles (utile si l'on saute plusieurs slides)
-    this.videos.forEach(v => {
-      if (v === next || +getComputedStyle(v).opacity === 0) return;
-      gsap.to(v, {
-        opacity: 0, scale: 0.98, duration: dur, ease: 'power2.inOut', overwrite: true,
-        onComplete: () => { if (v !== this.videos[this.active]) v.pause(); },
+
+    if (this.reduced || !prev) {
+      gsap.set(next, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', scale: 1 });
+      this.videos.forEach(v => { if (v !== next) { gsap.set(v, { opacity: 0 }); v.pause(); } });
+    } else {
+      const from = dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)';
+      gsap.fromTo(next, { opacity: 1, clipPath: from, scale: 1.08 },
+        { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.1, ease: 'power3.inOut', overwrite: true,
+          onComplete: () => this.videos.forEach(v => { if (v !== this.videos[this.active]) { gsap.set(v, { opacity: 0, xPercent: 0 }); v.pause(); } }) });
+      gsap.to(prev, {
+        xPercent: -4 * dir, duration: 1.1, ease: 'power3.inOut', overwrite: true,
+        onComplete: () => {
+          gsap.set(prev, { xPercent: 0 });
+          if (prev !== this.videos[this.active]) { gsap.set(prev, { opacity: 0 }); prev.pause(); }
+        },
       });
-    });
+    }
     this.active = i;
   }
-
-  resize() {}
-
-  setProgress(p) {
-    this.p = p;
-    const n = CLIPS.length;
-    this.activate(Math.min(n - 1, Math.floor(p * n + 1e-6)));
-  }
-
-  render() {}
 
   telemetry() {
     const i = Math.max(0, this.active);
