@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://skynord.fr/sitemap.xml
+Sitemap: https://www.skynord.fr/sitemap.xml
