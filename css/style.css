@@ -224,7 +224,7 @@ a.stat__src { text-decoration: underline; text-decoration-color: rgba(86,96,109,
 .pack--rev .pack__text { order: 2; }
 .pack__text h3 { font-size: clamp(28px, 3.4vw, 50px); margin-bottom: 18px; }
 .pack__text p { color: #2E3640; max-width: 46ch; font-size: 17px; }
-.pack__gear { margin-top: 14px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute) !important; }
+.pack__gear { max-width: none !important; margin-top: 14px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute) !important; }
 .pack__cta { display: inline-block; margin-top: 26px; font-weight: 700; color: var(--accent-ink); padding: 10px 0 2px; }
 .pack__media { margin: 0; }
 .pack__frame { position: relative; overflow: hidden; border-radius: 6px; aspect-ratio: 16 / 9; background: #D9DFE4; clip-path: inset(var(--clip, 0%) round 6px); cursor: pointer; }
