@@ -137,12 +137,12 @@ const hud = {
   time: $('#hudTime'), zone: $('#hudZone'), chap: $('#hudChap'),
   alt: $('#hudAlt'), spd: $('#hudSpd'), hdg: $('#hudHdg'), gps: $('#hudGps'), bat: $('#hudBat'),
 };
-const ZONES = ['APPROCHE', 'SÉJOUR', 'TERRASSE', 'ENVOL'];
-const SPEED = [3.2, 1.4, 2.1, 4.6];
+const ZONES = ['APPROCHE', 'ENTRÉE', 'SÉJOUR', 'TERRASSE'];
+const SPEED = [3.2, 1.6, 1.4, 2.1];
 const railItems = [...document.querySelectorAll('.rail li')];
 const progressBar = $('#progressBar'), counter = $('#slCount');
 function updateUi(i) {
-  const t = { alt: [4, 1.4, 2.2, 5][i], heading: 195 + i * 4 }; // données simulées
+  const t = { alt: [4, 1.6, 1.4, 2.2][i], heading: 195 + i * 4 }; // données simulées
   const secs = 6 + i * 11;
   hud.time.textContent = `00:00:${String(secs).padStart(2, '0')}`;
   hud.zone.textContent = ZONES[i];

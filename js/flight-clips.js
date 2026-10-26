@@ -1,8 +1,8 @@
 // Visite en slider horizontal : un court plan vidéo par espace, en boucle.
 // Changement de slide = volet horizontal minuté (le nouveau plan glisse depuis la droite),
 // indépendant du scroll : fluide sur téléphone comme sur ordinateur.
-const CLIPS = ['approche', 'interieur', 'piscine', 'vue'];
-const ALT = [4, 1.4, 2.2, 5]; // altitudes indicatives (HUD, données simulées)
+const CLIPS = ['approche', 'entree', 'interieur', 'piscine'];
+const ALT = [4, 1.6, 1.4, 2.2]; // altitudes indicatives (HUD, données simulées)
 
 export class FlightClips {
   constructor(el, { base = 'assets/visite/', reduced = false } = {}) {

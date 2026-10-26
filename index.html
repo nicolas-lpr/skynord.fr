@@ -44,7 +44,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
 
   <script type="importmap">
   { "imports": {
@@ -109,7 +109,7 @@
 
         <!-- Rail des espaces -->
         <ol class="rail" id="rail" aria-label="Espaces de la villa">
-          <li><button type="button">Approche</button></li><li><button type="button">Séjour</button></li><li><button type="button">Terrasse</button></li><li><button type="button">Envol</button></li>
+          <li><button type="button">Approche</button></li><li><button type="button">Entrée</button></li><li><button type="button">Séjour</button></li><li><button type="button">Terrasse</button></li>
         </ol>
 
         <div class="slider-ui">
@@ -130,6 +130,11 @@
             <button class="btn magnetic" id="autoFly" type="button">Explorer la villa</button>
             <span class="hint">ou faites glisser</span>
           </div>
+        </div>
+
+        <div class="beat beat--end">
+          <h2 class="end__title display">De la porte d'entrée au jardin.</h2>
+          <p>Extérieur, intérieur, abords : chaque espace filmé en plans fluides, comme une vraie visite.</p>
         </div>
 
         <div class="beat beat--left" data-from="0.33" data-to="0.5">
@@ -158,10 +163,6 @@
           </article>
         </div>
 
-        <div class="beat beat--end" data-from="0.86" data-to="1.01">
-          <h2 class="end__title display">Le bien, et tout ce qui l'entoure.</h2>
-          <p>Terrain, quartier, vue, accès : le drone donne l'échelle que les photos ne montrent pas.</p>
-        </div>
       </div>
     </section>
 
@@ -181,7 +182,7 @@
             <li>Intérieur : toutes les pièces, plan par plan</li>
             <li>Livré monté, en horizontal et en vertical 9:16</li>
           </ul>
-          <p class="pack__gear">Filmé à l'iPhone 17 Pro Max sur stabilisateur DJI Osmo Mobile 8</p>
+          <p class="pack__gear">Tourné en 4K, stabilisé sur nacelle 3 axes</p>
           <a class="pack__cta ul" href="#contact" data-pack="Pack Visite Complète">Demander ce pack</a>
         </div>
         <figure class="pack__media">
@@ -357,7 +358,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-  <script type="module" src="js/main.js?v=7"></script>
+  <script type="module" src="js/main.js?v=8"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);
