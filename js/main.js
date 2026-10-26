@@ -51,47 +51,60 @@ addEventListener('scroll', readTarget, { passive: true });
 addEventListener('resize', () => { readTarget(); engine?.resize(); });
 readTarget();
 
-let beats = [], railItems = [...document.querySelectorAll('.rail li')];
+let railItems = [...document.querySelectorAll('.rail li')];
 const rail = $('#rail'), hudLeft = $('.hud__bl');
+
+// Un texte par slide : accueil, (entrée sans texte), séjour, terrasse, envol.
+// Les textes changent en fondu minuté : fluide même si le scroll est saccadé.
+const BEAT_OF_CHAPTER = [0, -1, 1, 2, 3];
+let beats = [], currentBeat = -1;
 function setupBeats() {
-  const ch = engine.chapters;
-  const ranges = [
-    [0, ch[1] * 0.6],
-    [ch[2] - 0.01, ch[3] - 0.05],
-    [ch[3] + 0.01, ch[4] - 0.02],
-    [ch[4] + 0.02, 1.01],
-  ];
-  beats = [...document.querySelectorAll('.beat')].map((el, i) => ({ el, from: ranges[i][0], to: ranges[i][1], shown: i === 0 }));
-  beats.slice(1).forEach(b => gsap.set(b.el.querySelectorAll('.panel, .eyebrow, h2, p'), { y: 24 }));
+  beats = [...document.querySelectorAll('.beat')];
+  beats.forEach((el, i) => gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 }));
+  beats[0].classList.add('on');
+  currentBeat = 0;
 }
 
 function updateBeats(p) {
-  const F = 0.022; // longueur des fondus (en progression)
-  for (const b of beats) {
-    const o = b.from <= 0 ? 1 - smooth(b.to - F, b.to, p) : smooth(b.from, b.from + F, p) * (1 - smooth(b.to - F, b.to, p));
-    b.el.style.opacity = o.toFixed(3);
-    b.el.style.visibility = o > 0.001 ? 'visible' : 'hidden';
-    b.el.classList.toggle('on', o > 0.5);
-    const inside = p > b.from && p < b.to;
-    if (inside && !b.shown) enterBeat(b);
-    b.shown = inside || (b.from <= 0 && p < b.to);
+  const n = engine.chapters.length;
+  const b = BEAT_OF_CHAPTER[Math.min(n - 1, Math.floor(p * n + 1e-6))];
+  if (b === currentBeat) return;
+  const prev = beats[currentBeat], next = beats[b];
+  if (prev) {
+    prev.classList.remove('on');
+    gsap.to(prev, { autoAlpha: 0, duration: reduced ? 0 : 0.45, ease: 'power2.out', overwrite: true });
   }
+  if (next) {
+    next.classList.add('on');
+    gsap.to(next, { autoAlpha: 1, duration: reduced ? 0 : 0.8, delay: reduced ? 0 : 0.3, ease: 'power2.out', overwrite: true });
+    if (b > 0) enterBeat(next);
+  }
+  currentBeat = b;
 }
 
-function enterBeat(b) {
-  const els = b.el.querySelectorAll('.panel, .eyebrow, h2, p');
-  if (reduced) { gsap.set(els, { y: 0 }); } else gsap.to(els, { y: 0, duration: 1.1, ease: 'power3.out', stagger: 0.06, overwrite: true });
-  b.el.querySelectorAll('[data-count]').forEach(n => {
+function enterBeat(el) {
+  const els = el.querySelectorAll('.panel, h2, p');
+  if (!reduced) gsap.fromTo(els, { y: 24 }, { y: 0, duration: 1.1, delay: 0.3, ease: 'power3.out', stagger: 0.06, overwrite: true });
+  el.querySelectorAll('[data-count]').forEach(n => {
     const to = +n.dataset.count, pre = n.dataset.prefix || '', o = { v: 0 };
     if (reduced) { n.textContent = pre + to; return; }
-    gsap.to(o, { v: to, duration: 1.8, ease: 'power2.out', onUpdate: () => { n.textContent = pre + Math.round(o.v); } });
+    gsap.to(o, { v: to, duration: 1.8, delay: 0.3, ease: 'power2.out', onUpdate: () => { n.textContent = pre + Math.round(o.v); } });
+  });
+}
+
+// Aimantation : quand on arrête de scroller, la page se cale sur la slide la plus proche
+if (!reduced) {
+  const n = 5, points = [0, ...Array.from({ length: n - 1 }, (_, i) => (i + 1.5) / n), 1];
+  ScrollTrigger.create({
+    trigger: flightEl, start: 'top top', end: 'bottom bottom',
+    snap: { snapTo: points, duration: { min: 0.35, max: 0.8 }, delay: 0.12, ease: 'power2.inOut' },
   });
 }
 
 function revealHero() {
   if (reduced) return;
   gsap.from('.beat--hero .mask > span', { yPercent: 105, duration: 1.3, ease: 'power4.out', stagger: 0.12 });
-  gsap.from('.beat--hero .eyebrow, .hero__lead, .hero__cta', { opacity: 0, y: 18, duration: 1.2, ease: 'power3.out', stagger: 0.1, delay: 0.35 });
+  gsap.from('.hero__lead, .hero__cta', { opacity: 0, y: 18, duration: 1.2, ease: 'power3.out', stagger: 0.1, delay: 0.35 });
 }
 
 /* ---------------------------------------------------------------- HUD (10 Hz max) */
@@ -119,7 +132,7 @@ function updateHud(p, now) {
   hud.bat.textContent = Math.round(98 - p * 9);
   hud.gps.textContent = `${(50.43 + p * 0.0004).toFixed(4)} N · ${(2.83 - p * 0.0003).toFixed(4)} E`;
   railItems.forEach((li, i) => li.classList.toggle('on', i === c));
-  rail.style.opacity = hudLeft.style.opacity = smooth(0.06, 0.09, p).toFixed(2); // libère le titre d'accueil
+  rail.style.opacity = hudLeft.style.opacity = smooth(0.16, 0.2, p).toFixed(2); // libère le titre d'accueil
   hud.el.style.opacity = (1 - smooth(0.95, 1, p)).toFixed(2);
 }
 

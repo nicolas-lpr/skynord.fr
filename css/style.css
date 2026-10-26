@@ -98,11 +98,10 @@ p { margin: 0; }
 @media (max-width: 720px) { .nav nav a.ul { display: none; } }
 
 /* ============ VOL ============ */
-.flight { position: relative; height: 750vh; }
+.flight { position: relative; height: 600vh; }
 .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #cfd6dc; color: var(--on); }
 #stageCanvas { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
-.clips video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.1s var(--ease); transform-origin: 50% 55%; }
-.clips video.on { opacity: 1; }
+.clips video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform-origin: 50% 55%; will-change: opacity, transform; }
 /* Voiles légers : juste assez pour lire le HUD et les titres */
 .stage__shade { position: absolute; inset: 0; pointer-events: none;
   background:
