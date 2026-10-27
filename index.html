@@ -43,9 +43,9 @@
     },
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": "ProfessionalService",
       "name": "Skynord",
-      "description": "Films immobiliers par drone : visite complète intérieur et extérieur, film aérien, fly-through FPV.",
+      "description": "Vidéo drone immobilier dans le Nord et le Pas-de-Calais : film aérien du bien, visite complète intérieur et extérieur, fly-through FPV intérieur. Format vertical 9:16 prêt à publier inclus. Pilote professionnel, vols conformes à la réglementation DGAC.",
       "url": "https://www.skynord.fr/",
       "logo": "https://www.skynord.fr/assets/icon-512.png",
       "image": "https://www.skynord.fr/assets/og.jpg",
@@ -63,12 +63,145 @@
         {
           "@type": "AdministrativeArea",
           "name": "Pas-de-Calais (62)"
+        },
+        {
+          "@type": "City",
+          "name": "Lille"
+        },
+        {
+          "@type": "City",
+          "name": "Roubaix"
+        },
+        {
+          "@type": "City",
+          "name": "Tourcoing"
+        },
+        {
+          "@type": "City",
+          "name": "Villeneuve-d'Ascq"
+        },
+        {
+          "@type": "City",
+          "name": "Dunkerque"
+        },
+        {
+          "@type": "City",
+          "name": "Valenciennes"
+        },
+        {
+          "@type": "City",
+          "name": "Douai"
+        },
+        {
+          "@type": "City",
+          "name": "Cambrai"
+        },
+        {
+          "@type": "City",
+          "name": "Maubeuge"
+        },
+        {
+          "@type": "City",
+          "name": "Armentières"
+        },
+        {
+          "@type": "City",
+          "name": "Calais"
+        },
+        {
+          "@type": "City",
+          "name": "Boulogne-sur-Mer"
+        },
+        {
+          "@type": "City",
+          "name": "Le Touquet-Paris-Plage"
+        },
+        {
+          "@type": "City",
+          "name": "Arras"
+        },
+        {
+          "@type": "City",
+          "name": "Lens"
+        },
+        {
+          "@type": "City",
+          "name": "Béthune"
+        },
+        {
+          "@type": "City",
+          "name": "Saint-Omer"
+        },
+        {
+          "@type": "City",
+          "name": "Liévin"
+        },
+        {
+          "@type": "City",
+          "name": "Hénin-Beaumont"
+        },
+        {
+          "@type": "City",
+          "name": "Berck"
         }
       ],
       "sameAs": [
         "https://www.instagram.com/skynord.immo/",
         "https://www.tiktok.com/@sky.nord"
-      ]
+      ],
+      "@id": "https://www.skynord.fr/#entreprise",
+      "knowsAbout": [
+        "vidéo drone immobilier",
+        "prise de vue aérienne",
+        "drone FPV",
+        "visite virtuelle immobilière",
+        "vidéo immobilière",
+        "reel Instagram immobilier"
+      ],
+      "priceRange": "Sur devis",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Prestations vidéo drone immobilier",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pack Visite Complète",
+              "description": "Toute la maison en un seul film : l'extérieur puis chaque pièce en plans stabilisés, filmé en 4K sur stabilisateur DJI Osmo Mobile 8. Livré monté en horizontal et en vertical 9:16."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pack Mandat Exclusif",
+              "description": "Film aérien par drone (DJI Mini 5 Pro) de l'extérieur, du terrain et de l'environnement du bien."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Fly-through Intérieur",
+              "description": "Plan séquence FPV (DJI Avata 2) qui traverse les pièces une à une."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Visite complète d'une villa avec piscine · Skynord",
+      "description": "Exemple du Pack Visite Complète : extérieur, piscine puis chaque pièce de la maison en plans stabilisés.",
+      "thumbnailUrl": "https://www.skynord.fr/assets/examples/visite-poster.webp",
+      "contentUrl": "https://www.skynord.fr/assets/examples/visite.mp4",
+      "uploadDate": "2026-10-26",
+      "duration": "PT54S",
+      "publisher": {
+        "@id": "https://www.skynord.fr/#entreprise"
+      }
     }
   ]
   </script>
@@ -186,7 +319,7 @@
         </div>
         <figure class="pack__media">
           <div class="pack__frame pack__frame--v" data-play="assets/examples/visite.mp4" data-cap="Pack Visite Complète" data-vertical style="background-image: url(assets/examples/visite-poster.webp)">
-            <video muted loop playsinline preload="none" poster="assets/examples/visite-poster.webp" data-src="assets/examples/visite-extrait.mp4"></video>
+            <video aria-label="Exemple de visite complète d'une villa avec piscine, intérieur et extérieur" muted loop playsinline preload="none" poster="assets/examples/visite-poster.webp" data-src="assets/examples/visite-extrait.mp4"></video>
           </div>
         </figure>
       </article>
@@ -200,7 +333,7 @@
         </div>
         <figure class="pack__media">
           <div class="pack__frame" data-play="assets/examples/aerien.mp4" data-cap="Pack Mandat Exclusif" style="background-image: url(assets/examples/aerien-poster.webp)">
-            <video muted loop playsinline preload="none" poster="assets/examples/aerien-poster.webp" data-src="assets/examples/aerien.mp4"></video>
+            <video aria-label="Exemple de film aérien par drone d'une maison avec piscine" muted loop playsinline preload="none" poster="assets/examples/aerien-poster.webp" data-src="assets/examples/aerien.mp4"></video>
           </div>
         </figure>
       </article>
@@ -214,7 +347,7 @@
         </div>
         <figure class="pack__media">
           <div class="pack__frame" data-play="assets/examples/flythrough.mp4" data-cap="Fly-through Intérieur" style="background-image: url(assets/examples/flythrough-poster.webp)">
-            <video muted loop playsinline preload="none" poster="assets/examples/flythrough-poster.webp" data-src="assets/examples/flythrough.mp4"></video>
+            <video aria-label="Exemple de vidéo fly-through intérieur d'une maison moderne" muted loop playsinline preload="none" poster="assets/examples/flythrough-poster.webp" data-src="assets/examples/flythrough.mp4"></video>
           </div>
         </figure>
       </article>
