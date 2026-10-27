@@ -6,6 +6,16 @@ const TO = 'skynord.immo@gmail.com';
 const ENDPOINT = `https://formsubmit.co/ajax/${TO}`;
 const PRO = ['Agence immobilière', 'Hôtel ou gîte', 'Promoteur ou constructeur', 'Autre'];
 
+// Formats acceptés
+// email : nom@domaine.ext (extension de 2 lettres ou plus, pas d'espace, pas de point doublé)
+const EMAIL = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*\.[a-z]{2,}$/i;
+// téléphone : français (06 12 34 56 78, 0612345678, +33 6 12 34 56 78) ou international (+32…, 8 à 15 chiffres)
+const validPhone = v => {
+  const n = v.replace(/[\s.\-()]/g, '');
+  return /^0[1-9]\d{8}$/.test(n) || /^(\+|00)33[1-9]\d{8}$/.test(n) || /^(\+|00)(?!33)[1-9]\d{7,14}$/.test(n);
+};
+const validEmail = v => EMAIL.test(v) && !v.includes('..');
+
 export function initForm() {
   const form = document.getElementById('quiz');
   if (!form) return;
@@ -45,7 +55,7 @@ export function initForm() {
     });
     step.querySelectorAll('input[required]:not([type=radio]):not([type=checkbox])').forEach(input => {
       const v = input.value.trim();
-      const good = input.type === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) : v.length >= 2;
+      const good = input.type === 'email' ? validEmail(v) : input.type === 'tel' ? validPhone(v) : v.length >= 2;
       input.closest('.field').classList.toggle('bad', !good);
       if (!good) ok = false;
     });

@@ -197,8 +197,7 @@ function updateUi(i) {
 // Rideau : en descendant, la visite recule et s'assombrit pendant que les prestations montent par-dessus
 if (!reduced) {
   gsap.timeline({ scrollTrigger: { trigger: '#prestations', start: 'top bottom', end: 'top top', scrub: 0.6 } })
-    .to(flightEl, { scale: 0.9, yPercent: -6, borderRadius: 32, '--cover': 0.6, ease: 'none' }, 0)
-    .fromTo('#prestations', { borderTopLeftRadius: 48, borderTopRightRadius: 48 }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, ease: 'none' }, 0);
+    .to(flightEl, { scale: 0.9, yPercent: -6, borderRadius: 32, '--cover': 0.6, ease: 'none' }, 0);
 }
 
 if (!reduced) gsap.fromTo('#prestations .section__head .h2', { '--bar': 0 }, { '--bar': 1, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: '#prestations .section__head', start: 'top 80%' } });

@@ -64,13 +64,17 @@
           "@type": "AdministrativeArea",
           "name": "Pas-de-Calais (62)"
         }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/skynord.immo/",
+        "https://www.tiktok.com/@sky.nord"
       ]
     }
   ]
   </script>
 
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=17">
+  <link rel="stylesheet" href="css/style.css?v=18">
 
 </head>
 <body>
@@ -176,7 +180,7 @@
             <div class="stat">
               <span class="stat__num"><b data-count="403" data-prefix="+">0</b>&nbsp;%</span>
               <span class="stat__label">de demandes pour les annonces accompagnées d'une vidéo.</span>
-              <span class="stat__src">Même source, même réserve</span>
+              <a class="stat__src" href="https://www.digitalcameraworld.com/news/aerial-real-estate-is-quick-drone-photos-will-help-sell-a-home-68-faster-says-study" target="_blank" rel="noopener">Étude américaine relayée par Digital Camera World, fév. 2024 · marché US, échantillon non précisé</a>
             </div>
           </article>
         </div>
@@ -267,6 +271,10 @@
             <li><a class="ul" href="mailto:Skynord.immo@gmail.com">Skynord.immo@gmail.com</a></li>
             <li><a class="ul" href="tel:+33650539932">06 50 53 99 32</a></li>
           </ul>
+          <ul class="socials" aria-label="Réseaux sociaux">
+            <li><a href="https://www.instagram.com/skynord.immo/" target="_blank" rel="noopener" aria-label="Instagram @skynord.immo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>@skynord.immo</span></a></li>
+            <li><a href="https://www.tiktok.com/@sky.nord" target="_blank" rel="noopener" aria-label="TikTok @sky.nord"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.5 2.6 2.4 4.4 5 4.6"/></svg><span>@sky.nord</span></a></li>
+          </ul>
         </div>
 
         <form class="quiz" id="quiz" novalidate>
@@ -336,8 +344,8 @@
                 <label class="field" data-pro hidden><span>Agence ou société</span><input name="societe" autocomplete="organization"></label>
               </div>
               <div class="f2">
-                <label class="field"><span>Email *</span><input name="email" type="email" required autocomplete="email"><em class="err">Adresse email invalide.</em></label>
-                <label class="field"><span>Téléphone *</span><input name="tel" type="tel" required autocomplete="tel"><em class="err">Indiquez un numéro pour vous rappeler.</em></label>
+                <label class="field"><span>Email *</span><input name="email" type="email" required autocomplete="email"><em class="err">Adresse email invalide (ex. nom@domaine.fr).</em></label>
+                <label class="field"><span>Téléphone *</span><input name="tel" type="tel" required autocomplete="tel"><em class="err">Numéro invalide (ex. 06 12 34 56 78 ou +33 6 12 34 56 78).</em></label>
               </div>
               <label class="field"><span>Précisions (facultatif)</span><textarea name="precisions" rows="3" placeholder="Accès, date de mise en vente, pièces à mettre en avant…"></textarea></label>
               <label class="check"><input type="checkbox" name="rgpd" required><span>J'accepte que ces informations soient utilisées pour répondre à ma demande. <a class="ul" href="mentions-legales.html#confidentialite">Confidentialité</a></span></label>
@@ -362,6 +370,7 @@
   <footer class="foot">
     <span>© 2026 Skynord</span>
     <span>SIRET : 131 167 983 00017</span>
+    <span class="foot__social"><a class="ul" href="https://www.instagram.com/skynord.immo/" target="_blank" rel="noopener">Instagram</a> · <a class="ul" href="https://www.tiktok.com/@sky.nord" target="_blank" rel="noopener">TikTok</a></span>
     <a class="ul" href="mentions-legales.html">Mentions légales &amp; confidentialité</a>
   </footer>
 
@@ -376,7 +385,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script type="module" src="js/main.js?v=17"></script>
+  <script type="module" src="js/main.js?v=18"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);
