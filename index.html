@@ -158,7 +158,7 @@
         "vidéo immobilière",
         "reel Instagram immobilier"
       ],
-      "priceRange": "Sur devis",
+      "priceRange": "À partir de 350 €",
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
         "name": "Prestations vidéo drone immobilier",
@@ -169,6 +169,11 @@
               "@type": "Service",
               "name": "Pack Visite Complète",
               "description": "Toute la maison en un seul film : l'extérieur puis chaque pièce en plans stabilisés, filmé en 4K sur stabilisateur DJI Osmo Mobile 8. Livré monté en horizontal et en vertical 9:16."
+            },
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": 400,
+              "priceCurrency": "EUR"
             }
           },
           {
@@ -177,6 +182,11 @@
               "@type": "Service",
               "name": "Pack Mandat Exclusif",
               "description": "Film aérien par drone (DJI Mini 5 Pro) de l'extérieur, du terrain et de l'environnement du bien."
+            },
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": 350,
+              "priceCurrency": "EUR"
             }
           },
           {
@@ -185,6 +195,11 @@
               "@type": "Service",
               "name": "Fly-through Intérieur",
               "description": "Plan séquence FPV (DJI Avata 2) qui traverse les pièces une à une."
+            },
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": 490,
+              "priceCurrency": "EUR"
             }
           }
         ]
@@ -207,7 +222,7 @@
   </script>
 
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=19">
+  <link rel="stylesheet" href="css/style.css?v=20">
 
 </head>
 <body>
@@ -315,6 +330,7 @@
             <li>Livré monté, en horizontal et en vertical 9:16</li>
           </ul>
           <p class="pack__gear">Filmé en 4K sur stabilisateur DJI Osmo Mobile 8</p>
+          <p class="pack__price">À partir de <b>400 €</b> <span>TVA non applicable</span></p>
           <a class="pack__cta ul" href="#contact" data-pack="Pack Visite Complète">Demander ce pack</a>
         </div>
         <figure class="pack__media">
@@ -329,6 +345,7 @@
           <h3 class="display">Pack Mandat Exclusif</h3>
           <p>Extérieur, terrain et environnement du bien réunis dans un film aérien qui situe la propriété et en donne l'échelle.</p>
           <p class="pack__gear">Filmé au DJI Mini 5 Pro</p>
+          <p class="pack__price">À partir de <b>350 €</b> <span>TVA non applicable</span></p>
           <a class="pack__cta ul" href="#contact" data-pack="Pack Mandat Exclusif">Demander ce pack</a>
         </div>
         <figure class="pack__media">
@@ -343,6 +360,7 @@
           <h3 class="display">Fly-through Intérieur</h3>
           <p>Un plan séquence fluide qui traverse les pièces une à une : l'acheteur visite avant de se déplacer.</p>
           <p class="pack__gear">Filmé au DJI Avata 2 (FPV)</p>
+          <p class="pack__price">À partir de <b>490 €</b> <span>TVA non applicable</span></p>
           <a class="pack__cta ul" href="#contact" data-pack="Fly-through Intérieur">Demander ce pack</a>
         </div>
         <figure class="pack__media">
@@ -351,6 +369,39 @@
           </div>
         </figure>
       </article>
+
+      <aside class="incl">
+        <p class="incl__title">Le format réseaux sociaux est inclus.</p>
+        <p>Ailleurs, la version verticale est souvent vendue en option. Chez Skynord, chaque film est livré <strong>monté</strong>, en 16:9 et en 9:16, prêt à publier sur Instagram et TikTok. Pas de rushs bruts à trier, pas de supplément.</p>
+      </aside>
+
+      <details class="tarifs">
+        <summary>Voir la grille de tarifs</summary>
+        <div class="tarifs__body">
+          <table>
+            <thead><tr><th scope="col">Prestation</th><th scope="col">Selon le bien</th><th scope="col">Tarif</th></tr></thead>
+            <tbody>
+              <tr><th scope="row" rowspan="3">Pack Visite Complète</th><td>Jusqu'à 100 m²</td><td>400 €</td></tr>
+              <tr><td>100 à 180 m²</td><td>480 €</td></tr>
+              <tr><td>180 à 280 m²</td><td>560 €</td></tr>
+              <tr><th scope="row" rowspan="2">Pack Mandat Exclusif</th><td>Terrain jusqu'à 1 000 m²</td><td>350 €</td></tr>
+              <tr><td>Grand terrain, propriété</td><td>450 €</td></tr>
+              <tr><th scope="row" rowspan="3">Fly-through Intérieur</th><td>Jusqu'à 100 m²</td><td>490 €</td></tr>
+              <tr><td>100 à 200 m²</td><td>590 €</td></tr>
+              <tr><td>200 à 300 m²</td><td>690 €</td></tr>
+              <tr class="tarifs__combo"><th scope="row">Pack complet</th><td>Visite Complète + film aérien</td><td>dès 650 €</td></tr>
+            </tbody>
+          </table>
+          <ul class="tarifs__notes">
+            <li>Au-delà de ces surfaces, domaines et châteaux : sur devis.</li>
+            <li>Options : livraison express en 24 h (+ 50 €), 10 photos HD (+ 80 €).</li>
+            <li>Déplacement inclus jusqu'à 30 km, puis 0,40 €/km.</li>
+            <li>Agences : −10 % dès 3 biens par mois, −15 % dès 5.</li>
+            <li>Prix nets, TVA non applicable (art. 293 B du CGI). Devis précis et gratuit sur demande.</li>
+          </ul>
+          <a class="btn" href="#contact">Demander mon devis</a>
+        </div>
+      </details>
 
       <ul class="band" aria-label="Engagements">
         <li>Format vertical 9:16 monté et prêt à publier, inclus dans chaque pack</li>
@@ -424,6 +475,7 @@
               <label class="choice"><input type="radio" name="formule" value="Pack Visite Complète"><span>Pack Visite Complète</span></label>
               <label class="choice"><input type="radio" name="formule" value="Pack Mandat Exclusif"><span>Pack Mandat Exclusif</span></label>
               <label class="choice"><input type="radio" name="formule" value="Fly-through Intérieur"><span>Fly-through Intérieur</span></label>
+              <label class="choice"><input type="radio" name="formule" value="Pack complet"><span>Pack complet</span></label>
               <label class="choice"><input type="radio" name="formule" value="Je ne sais pas encore"><span>Je ne sais pas encore</span></label>
             </div>
             <em class="err">Choisissez une réponse.</em>
@@ -495,7 +547,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script type="module" src="js/main.js?v=19"></script>
+  <script type="module" src="js/main.js?v=20"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);
