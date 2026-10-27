@@ -2,7 +2,6 @@
 // Changement de slide = volet horizontal minuté (le nouveau plan glisse depuis la droite),
 // indépendant du scroll : fluide sur téléphone comme sur ordinateur.
 const CLIPS = ['approche', 'entree', 'interieur', 'piscine'];
-const ALT = [4, 1.6, 1.4, 2.2]; // altitudes indicatives (HUD, données simulées)
 
 export class FlightClips {
   constructor(el, { base = 'assets/visite/', reduced = false } = {}) {
@@ -99,10 +98,5 @@ export class FlightClips {
         },
       });
     }
-  }
-
-  telemetry() {
-    const i = Math.max(0, this.active);
-    return { alt: ALT[i], heading: 195 + i * 4 };
   }
 }

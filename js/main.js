@@ -165,30 +165,13 @@ function revealHero() {
   gsap.from('.hero__lead, .hero__cta', { opacity: 0, y: 18, duration: 1.2, ease: 'power3.out', stagger: 0.1, delay: 0.35 });
 }
 
-/* ---------------------------------------------------------------- HUD et commandes */
-const hud = {
-  time: $('#hudTime'), zone: $('#hudZone'), chap: $('#hudChap'),
-  alt: $('#hudAlt'), spd: $('#hudSpd'), hdg: $('#hudHdg'), gps: $('#hudGps'), bat: $('#hudBat'),
-};
-const ZONES = ['APPROCHE', 'ENTRÉE', 'SÉJOUR', 'TERRASSE'];
-const SPEED = [3.2, 1.6, 1.4, 2.1];
+/* ---------------------------------------------------------------- commandes du slider */
 const railItems = [...document.querySelectorAll('.rail li')];
 const progressBar = $('#progressBar'), counter = $('#slCount');
 function updateUi(i) {
-  const t = { alt: [4, 1.6, 1.4, 2.2][i], heading: 195 + i * 4 }; // données simulées
-  const secs = 6 + i * 11;
-  hud.time.textContent = `00:00:${String(secs).padStart(2, '0')}`;
-  hud.zone.textContent = ZONES[i];
-  hud.chap.textContent = String(i + 1).padStart(2, '0');
-  hud.alt.textContent = String(Math.round(t.alt)).padStart(3, '0');
-  hud.hdg.textContent = String(t.heading).padStart(3, '0');
-  hud.spd.textContent = SPEED[i].toFixed(1);
-  hud.bat.textContent = 98 - i * 2;
-  hud.gps.textContent = `${(50.43 + i * 0.0001).toFixed(4)} N · ${(2.83 - i * 0.0001).toFixed(4)} E`;
   railItems.forEach((li, k) => li.classList.toggle('on', k === i));
-  // sur l'accueil, le rail et les mesures laissent la place au titre
+  // sur l'accueil, le rail laisse la place au titre
   $('#rail').classList.toggle('off', i === 0);
-  $('.hud__bl').style.opacity = i === 0 ? 0 : 1;
   counter.textContent = `${String(i + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}`;
   progressBar.style.transform = `scaleX(${(i + 1) / N})`;
 }
