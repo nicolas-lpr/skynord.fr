@@ -37,3 +37,14 @@ Si l'envoi échoue, la messagerie du client s'ouvre avec la demande déjà rédi
 - tarifs si tu veux les montrer ;
 - chiffres sourcés supplémentaires ;
 - logo officiel (`assets/logo.svg` est une version redessinée provisoire) et image de partage `assets/og.jpg` (1200×630).
+
+## Pages par ville (référencement local)
+
+Les pages `drone-immobilier-*.html` (Lille, Côte d'Opale, Dunkerque, Arras, Valenciennes, Lens-Béthune) sont générées par :
+
+```bash
+python3 tools/villes.py
+```
+
+Pour modifier un texte, une liste de communes ou un prix, changez `tools/villes.py` puis relancez la commande (ne modifiez pas les pages à la main).
+Pensez aussi à mettre à jour `sitemap.xml` si vous ajoutez une ville.

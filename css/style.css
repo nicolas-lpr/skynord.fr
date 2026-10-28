@@ -331,3 +331,14 @@ a.stat__src { text-decoration: underline; text-decoration-color: rgba(86,96,109,
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* ---------- Questions fréquentes ---------- */
+.faq__list { max-width: 900px; border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__item summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 24px; padding: 22px 0; font-size: clamp(17px, 1.6vw, 21px); font-weight: 600; letter-spacing: -.01em; }
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after { content: "+"; font-weight: 400; font-size: 1.3em; line-height: 1; color: var(--accent-ink); transition: transform .3s var(--ease); }
+.faq__item[open] summary::after { transform: rotate(45deg); }
+.faq__item p { max-width: 70ch; padding: 0 0 24px; color: var(--mute); }
+.zones__cities { font-size: 14.5px; color: var(--mute); line-height: 1.9; }
+.zones__cities a { color: var(--accent-ink); }
