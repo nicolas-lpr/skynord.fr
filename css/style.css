@@ -306,7 +306,8 @@ a.stat__src { text-decoration: underline; text-decoration-color: rgba(86,96,109,
 .quiz__done h3 { font-size: clamp(28px, 3vw, 40px); margin-bottom: 14px; }
 .quiz__done p { color: rgba(238,241,243,.78); max-width: 46ch; }
 .quiz__done .quiz__help { margin-top: 14px; font-size: 14px; color: rgba(238,241,243,.55); }
-.quiz__done[hidden], .quiz__nav[hidden], .quiz__bar[hidden] { display: none; }
+.quiz__done[hidden], .quiz__nav[hidden], .quiz__bar[hidden], .quiz__fallback[hidden] { display: none; }
+.quiz__fallback { margin-top: 22px; }
 
 .foot { position: relative; z-index: 6; display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; padding: 28px var(--gutter); font-size: 13px; color: var(--mute); background: var(--bg); }
 

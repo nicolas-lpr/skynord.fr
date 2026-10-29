@@ -1,9 +1,23 @@
 // Questionnaire de contact en 5 étapes.
 // À l'envoi : un email rédigé arrive sur skynord.immo@gmail.com (via FormSubmit, sans serveur)
-// (FormSubmit tente aussi un accusé de réception au client, non garanti). L'envoi se fait en arrière-plan. Au tout premier envoi, FormSubmit envoie
+// (FormSubmit tente aussi un accusé de réception au client, non garanti). Au tout premier envoi, FormSubmit envoie
 // un email d'activation à skynord.immo@gmail.com : il faut cliquer dessus une fois.
+// Si FormSubmit ne répond pas (panne, comme le 29/10/2026), Web3Forms prend le relais. Si les deux échouent, le client ne voit pas
+// « c'est envoyé » : on lui propose d'envoyer la même demande, déjà rédigée, depuis sa messagerie, ou d'appeler.
 const TO = 'skynord.immo@gmail.com';
 const ENDPOINT = `https://formsubmit.co/ajax/${TO}`;
+// Secours si FormSubmit est en panne : Web3Forms (gratuit, 250 demandes/mois). La clé est publique par conception :
+// elle ne permet que d'envoyer des demandes vers skynord.immo@gmail.com.
+const W3F_ENDPOINT = 'https://api.web3forms.com/submit';
+const W3F_KEY = 'dad05864-023a-4008-bd71-91798b2d1fbc';
+// Envoi JSON avec délai maximal : true seulement si le service confirme la réception
+async function post(url, body, ms) {
+  try {
+    const r = await fetch(url, { method: 'POST', signal: AbortSignal.timeout?.(ms), headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    return r.ok && String(j.success) === 'true';
+  } catch (err) { console.error(`Envoi du questionnaire (${new URL(url).host}) :`, err); return false; }
+}
 const PRO = ['Agence immobilière', 'Hôtel ou gîte', 'Promoteur ou constructeur', 'Autre'];
 
 // Formats acceptés
@@ -105,35 +119,43 @@ export function initForm() {
       d.precisions ? `Précisions du client : « ${d.precisions} »` : 'Pas de précision supplémentaire.',
     ].join('\n\n');
 
-    // Envoi en arrière-plan : le client voit tout de suite la confirmation,
-    // sans attendre la réponse du service ni ouvrir sa messagerie.
-    fetch(ENDPOINT, {
-      method: 'POST',
-      keepalive: true,
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        _subject: `Nouvelle demande · ${d.profil} · ${d.bien} · ${d.lieu}`,
-        _template: 'box',
-        _replyto: d.email,
-        _autoresponse: `Bonjour ${first},\n\nMerci pour votre demande de tournage pour votre bien à ${d.lieu} (${d.formule}). Je l'étudie et je reviens vers vous rapidement.\n\nNicolas, Skynord\n06 50 53 99 32`,
-        'Demande': resume,
-        'Profil': d.profil,
-        'Bien': d.bien,
-        'Surface': d.surface || 'non précisée',
-        'Lieu': d.lieu,
-        'Formule': d.formule,
-        'Délai': d.delai,
-        'Nom': d.nom,
-        'Société': d.societe || '-',
-        email: d.email,
-        'Téléphone': d.tel,
-        'Précisions': d.precisions || '-',
-      }),
-    }).catch(err => console.error('Envoi du questionnaire :', err));
-    finish(`Merci ${first}, votre demande est bien envoyée. Je reviens vers vous rapidement, par téléphone ou par email.`);
+    // On attend la réponse du service (15 s au plus) avant de confirmer
+    next.disabled = true; next.textContent = 'Envoi…';
+    const subject = `Nouvelle demande · ${d.profil} · ${d.bien} · ${d.lieu}`;
+    const fields = {
+      'Demande': resume,
+      'Profil': d.profil,
+      'Bien': d.bien,
+      'Surface': d.surface || 'non précisée',
+      'Lieu': d.lieu,
+      'Formule': d.formule,
+      'Délai': d.delai,
+      'Nom': d.nom,
+      'Société': d.societe || '-',
+      email: d.email,
+      'Téléphone': d.tel,
+      'Précisions': d.precisions || '-',
+    };
+    // 1. FormSubmit (envoie aussi un accusé de réception au client) ; 2. s'il ne répond pas, Web3Forms
+    const sent = await post(ENDPOINT, {
+      _subject: subject,
+      _template: 'box',
+      _replyto: d.email,
+      _autoresponse: `Bonjour ${first},\n\nMerci pour votre demande de tournage pour votre bien à ${d.lieu} (${d.formule}). Je l'étudie et je reviens vers vous rapidement.\n\nNicolas, Skynord\n06 50 53 99 32`,
+      ...fields,
+    }, 8000) || await post(W3F_ENDPOINT, { access_key: W3F_KEY, subject, from_name: 'Site skynord.fr', replyto: d.email, ...fields }, 12000);
+    next.disabled = false;
+    if (sent) return finish(`Merci ${first}, votre demande est bien envoyée. Je reviens vers vous rapidement, par téléphone ou par email.`);
+    const details = [`Profil : ${d.profil}`, `Bien : ${d.bien}`, `Surface : ${d.surface || 'non précisée'}`, `Lieu : ${d.lieu}`, `Formule : ${d.formule}`,
+      `Délai : ${d.delai}`, `Nom : ${d.nom}`, `Société : ${d.societe || '-'}`, `Email : ${d.email}`, `Téléphone : ${d.tel}`, `Précisions : ${d.precisions || '-'}`].join('\n');
+    document.getElementById('quizMail').href = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${resume}\n\n${details}`)}`;
+    finish(`Désolé ${first}, l'envoi automatique n'a pas fonctionné. Rien à retaper : votre demande est déjà rédigée avec toutes vos réponses. Il suffit de l'envoyer depuis votre messagerie, ou de m'appeler.`,
+      "Votre demande n'est pas encore partie.");
   });
 
-  function finish(text) {
+  function finish(text, title) {
+    document.getElementById('quizDoneTitle').textContent = title || "Merci, c'est envoyé.";
+    document.getElementById('quizFallback').hidden = !title;
     steps.forEach(s => { s.hidden = true; });
     form.querySelector('.quiz__nav').hidden = true;
     form.querySelector('.quiz__bar').hidden = true;

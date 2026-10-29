@@ -289,7 +289,7 @@
   </script>
 
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=22">
 
 </head>
 <body>
@@ -560,8 +560,9 @@
           </div>
 
           <div class="quiz__done" id="quizDone" hidden aria-live="polite">
-            <h3 class="display">Merci, c'est envoyé.</h3>
+            <h3 class="display" id="quizDoneTitle">Merci, c'est envoyé.</h3>
             <p id="quizDoneText">Je reviens vers vous rapidement, par téléphone ou par email.</p>
+            <p class="quiz__fallback" id="quizFallback" hidden><a class="btn" id="quizMail" href="mailto:Skynord.immo@gmail.com">Envoyer ma demande préremplie par email</a></p>
             <p class="quiz__help">Une urgence ? Appelez le <a class="ul" href="tel:+33650539932">06 50 53 99 32</a>.</p>
           </div>
         </form>
@@ -624,7 +625,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script type="module" src="js/main.js?v=21"></script>
+  <script type="module" src="js/main.js?v=22"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);
