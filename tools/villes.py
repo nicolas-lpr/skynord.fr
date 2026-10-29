@@ -16,7 +16,7 @@ SITE = "https://www.skynord.fr"
 
 PACKS = [
     ("Pack Mandat Exclusif", 350, "Le bien vu du ciel : extérieur, terrain et environnement réunis dans un film aérien qui situe la propriété et en donne l'échelle."),
-    ("Pack Visite Complète", 400, "Toute la maison en un seul film : l'extérieur, puis chaque pièce en plans stabilisés."),
+    ("Pack Visite Complète", 400, "Toute la maison en un seul film : l'extérieur, puis les pièces qui mettent le bien en valeur, en plans stabilisés."),
     ("Fly-through Intérieur", 490, "Un plan séquence en drone FPV qui traverse les pièces une à une : l'acheteur visite avant de se déplacer."),
 ]
 
