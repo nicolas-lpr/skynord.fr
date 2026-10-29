@@ -12,7 +12,7 @@ Site statique (HTML/CSS/JS, sans build) de **Skynord**, vidéo drone immobilier 
 - `sources/` (vidéos 4K) et `tools/.cache/` sont ignorés par git ; `.vercelignore` exclut aussi `tools/`, `.claude/`, README, CREDITS, CLAUDE.md.
 
 ## Structure
-- `index.html` : une page. Ordre : chargement (logo animé) → **slider vidéo plein écran** (4 slides : approche, entrée, séjour, terrasse) → **Prestations** (« Trois façons de faire visiter », section champagne qui recouvre le slider au scroll, effet rideau) → encart « format 9:16 inclus » → engagements → zones 59/62 → **Contact** (questionnaire 5 étapes, bleu nuit) → pied de page.
+- `index.html` : une page. Ordre : chargement (logo animé) → **slider vidéo plein écran** (4 slides : approche, entrée, séjour, terrasse) → **Prestations** (« Trois façons de faire visiter », section champagne qui recouvre le slider au scroll, effet rideau) → encart « format 9:16 inclus » → engagements → zones 59/62 → **Contact** (questionnaire 5 étapes, bleu nuit) → **FAQ** (7 questions, pour le référencement : tout en bas, à la demande de Nicolas) → pied de page.
 - `js/main.js` : slider (glisser doigt/souris/trackpad, flèches, clavier, rail cliquable, défilement auto 7 s, visite guidée « Explorer la villa » 3 s/slide), textes par slide, effet rideau GSAP, révélations, lecteur plein écran, exemples des packs.
 - `js/flight-clips.js` : moteur des slides (vidéos `assets/visite/*.mp4`, version mobile `-m`, images fixes `.webp`, volet horizontal minuté, préchargement).
 - `js/form.js` : questionnaire → envoi en arrière-plan via **FormSubmit** (`formsubmit.co/ajax/skynord.immo@gmail.com`, déjà activé). Validation stricte email/téléphone. Pas d'accusé de réception promis (non fiable).
