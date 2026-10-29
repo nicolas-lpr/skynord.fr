@@ -161,6 +161,9 @@ export function initForm() {
     form.querySelector('.quiz__bar').hidden = true;
     document.getElementById('quizDoneText').textContent = text;
     done.hidden = false;
+    // Le questionnaire rétrécit : sans ça, sur téléphone, on se retrouve plus bas (questions fréquentes) sans voir la confirmation
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    requestAnimationFrame(() => done.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' }));
   }
 
   // Préremplissage depuis « Demander ce pack »
