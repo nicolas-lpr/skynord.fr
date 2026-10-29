@@ -26,7 +26,7 @@ Fond « ciel du Nord » `#EDF0F2`, encre `#0E1218`, bleu nuit `#111A24` (boutons
 ## Contenu validé
 - Titre : « Vendez plus vite grâce au drone ». Titre de page : « Skynord · Films immobiliers par drone ».
 - Packs et prix affichés (« À partir de », TVA non applicable) : **Pack Visite Complète** (recommandé, iPhone 4K sur stabilisateur DJI Osmo Mobile 8) dès **400 €** ; **Pack Mandat Exclusif** (aérien, DJI Mini 5 Pro) dès **350 €** ; **Fly-through Intérieur** (FPV, DJI Avata 2) dès **490 €**. Grille détaillée **non publiée** : PDF interne `../Skynord - Grille de tarifs.pdf`.
-- Format 9:16 monté inclus (mis en avant sans prix barré : interdit sans prix antérieur réel).
+- Format au choix du client : horizontal ou vertical 9:16 (vertical quand c'est possible ; pas toujours en extérieur). Ne plus écrire « 9:16 inclus dans chaque pack ».
 - Engagements : DGAC, « Pilote professionnel · n° FRA-RP-000000159723 », livraison 48 h, devis.
 - Statistiques sourcées uniquement (Digital Camera World, fév. 2024) : 68 % plus vite, +403 % de demandes. Ne rien inventer (chiffres, avis, certifications).
 - Exemples des packs : vidéo de Nicolas (villa avec piscine) + vidéos libres de droits Pexels (David Pickup, Kindel Media) sans légende visible ; crédits dans `CREDITS.md`. Slider : villa Pexels (Alef Morais).
