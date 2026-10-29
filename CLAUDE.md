@@ -5,7 +5,7 @@ Site statique (HTML/CSS/JS, sans build) de **Skynord**, vidéo drone immobilier 
 ## Mise en ligne
 - Dépôt GitHub : `https://github.com/nicolas-lpr/skynord.fr` (branche `main`). Vercel redéploie à chaque push, en ~20 s, sur **https://www.skynord.fr** (`skynord.fr` redirige vers `www`).
 - Pousser : `git push` (le jeton GitHub est dans le trousseau macOS). Commits signés « Nicolas Laporterie <nicolaslaporterie@gmail.com> ».
-- **À chaque modif de CSS/JS : incrémenter `?v=N` sur `css/style.css` et `js/main.js` dans `index.html`** (et `style.css` dans `mentions-legales.html`). Version actuelle : `v=21`.
+- **À chaque modif de CSS/JS : incrémenter `?v=N` sur `css/style.css` (index.html, mentions-legales.html, cgv.html) et `js/main.js` (index.html)**. Versions actuelles : style.css `v=22`, main.js `v=23`.
 - Après une mise à jour importante, prévenir Bing via IndexNow (clé `934a8bfbb23b768a7fac3133c8795abd`, fichier à la racine) :
   `curl -X POST https://api.indexnow.org/indexnow -H "Content-Type: application/json" -d '{"host":"www.skynord.fr","key":"934a8bfbb23b768a7fac3133c8795abd","keyLocation":"https://www.skynord.fr/934a8bfbb23b768a7fac3133c8795abd.txt","urlList":["https://www.skynord.fr/"]}'`
 - Test local : `python3 -m http.server 8766` dans ce dossier.
@@ -17,7 +17,7 @@ Site statique (HTML/CSS/JS, sans build) de **Skynord**, vidéo drone immobilier 
 - `js/flight-clips.js` : moteur des slides (vidéos `assets/visite/*.mp4`, version mobile `-m`, images fixes `.webp`, volet horizontal minuté, préchargement).
 - `js/form.js` : questionnaire → envoi en arrière-plan via **FormSubmit** (`formsubmit.co/ajax/skynord.immo@gmail.com`, déjà activé). Validation stricte email/téléphone. Pas d'accusé de réception promis (non fiable).
 - `css/style.css` : police **Archivo** hébergée (`assets/fonts/`), une seule famille.
-- `mentions-legales.html`, `robots.txt`, `sitemap.xml`, `llms.txt`, `site.webmanifest`, icônes au logo Skynord.
+- `mentions-legales.html`, `cgv.html`, pages par ville `drone-immobilier-*.html` (générées par `tools/villes.py`), `robots.txt`, `sitemap.xml`, `llms.txt`, `site.webmanifest`, icônes au logo Skynord.
 - `tools/prepare_videos.py` : encodage vidéo (ffmpeg via `pip install imageio-ffmpeg`).
 
 ## Charte
