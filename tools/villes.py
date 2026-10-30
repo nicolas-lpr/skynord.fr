@@ -14,6 +14,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://www.skynord.fr"
 
+# Quartiers cités parmi les communes desservies (ce ne sont pas des villes pour Google)
+NEIGHBOURHOODS = {"Vieux-Lille", "Malo-les-Bains", "Rosendaël"}
+
 PACKS = [
     ("Pack Mandat Exclusif", 350, "Le bien vu du ciel : extérieur, terrain et environnement réunis dans un film aérien qui situe la propriété et en donne l'échelle."),
     ("Pack Visite Complète", 400, "Toute la maison en un seul film : l'extérieur, puis les pièces qui mettent le bien en valeur, en plans stabilisés."),
@@ -75,14 +78,14 @@ PAGE = """<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vidéo drone immobilier {where} · Skynord</title>
+  <title>Vidéo drone immobilier {at} · Skynord</title>
   <meta name="description" content="{description}">
   <link rel="canonical" href="{url}">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#EDF0F2">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Vidéo drone immobilier {where} · Skynord">
+  <meta property="og:title" content="Vidéo drone immobilier {at} · Skynord">
   <meta property="og:description" content="{description}">
   <meta property="og:url" content="{url}">
   <meta property="og:image" content="{site}/assets/og.jpg">
@@ -176,12 +179,13 @@ def esc(s):
 def build(z):
     url = f"{SITE}/drone-immobilier-{z['slug']}"
     faq = [(q.format(at=z["at"]), a) for q, a in COMMON_FAQ] + z["faq"]
-    description = f"Vidéo drone immobilier {z['where']} : film aérien, visite complète et fly-through FPV pour agences, particuliers et locations saisonnières. Dès 350 €, livré en 48 h. Skynord, pilote professionnel."
+    # ~150 caractères : au-delà, Google coupe la description dans ses résultats
+    description = f"Vidéo drone immobilier {z['at']} : film aérien, visite complète, FPV. Dès 350 €, livré monté en 48 h. Pilote pro DGAC, devis gratuit."
     ld = [
         {"@context": "https://schema.org", "@type": "Service", "serviceType": "Vidéo drone immobilier",
          "name": f"Vidéo drone immobilier {z['where']}", "url": url,
          "provider": {"@id": f"{SITE}/#entreprise", "@type": "ProfessionalService", "name": "Skynord", "alternateName": ["Sky Nord", "SkyNord"], "url": f"{SITE}/", "telephone": "+33650539932"},
-         "areaServed": [{"@type": "City", "name": t} for t in z["towns"]],
+         "areaServed": [{"@type": "Place" if t in NEIGHBOURHOODS else "City", "name": t} for t in z["towns"]],
          "offers": [{"@type": "Offer", "name": n, "priceSpecification": {"@type": "PriceSpecification", "minPrice": p, "priceCurrency": "EUR"}} for n, p, _ in PACKS]},
         {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Skynord", "item": f"{SITE}/"},
