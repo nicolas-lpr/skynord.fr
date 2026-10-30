@@ -133,7 +133,7 @@ PAGE = """<!doctype html>
       <p class="city__crumb"><a class="ul" href="/">Skynord</a> · Vidéo drone immobilier · {crumb}</p>
       <h1 class="display">Vidéo drone immobilier {where}</h1>
       <p class="city__lead">{intro}</p>
-      <p>Skynord (Sky Nord) réalise des films immobiliers par drone dans tout le {dept} et la région : vues aériennes, visite complète intérieur et extérieur, fly-through FPV. Pilote professionnel (n° FRA-RP-000000159723), vols conformes à la réglementation de la DGAC, film livré monté en 48 h.</p>
+      <p>Skynord réalise des films immobiliers par drone dans tout le {dept} et la région : vues aériennes, visite complète intérieur et extérieur, fly-through FPV. Pilote professionnel (n° FRA-RP-000000159723), vols conformes à la réglementation de la DGAC, film livré monté en 48 h.</p>
 
       <h2 class="display">Ce que le drone apporte {at}</h2>
       <p>{local}</p>
@@ -162,7 +162,7 @@ PAGE = """<!doctype html>
       </section>
     </main>
     <footer class="foot" style="padding-left:0;padding-right:0">
-      <span>© 2026 Skynord <span class="muted">(Sky Nord)</span></span>
+      <span>© 2026 Skynord</span>
       <span class="foot__social"><a class="ul" href="https://www.instagram.com/skynord.immo/" target="_blank" rel="noopener">Instagram</a> · <a class="ul" href="https://www.tiktok.com/@sky.nord" target="_blank" rel="noopener">TikTok</a> · <a class="ul" href="https://www.facebook.com/skynord.immo/" target="_blank" rel="noopener">Facebook</a> · <a class="ul" href="https://www.linkedin.com/company/146898651/" target="_blank" rel="noopener">LinkedIn</a></span>
       <span><a class="ul" href="/mentions-legales">Mentions légales &amp; confidentialité</a> · <a class="ul" href="/cgv">CGV</a></span>
     </footer>
