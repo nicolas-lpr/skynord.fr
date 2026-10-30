@@ -245,11 +245,16 @@ a.stat__src { text-decoration: underline; text-decoration-color: rgba(86,96,109,
 @media (max-width: 720px) { .zones { grid-template-columns: 1fr 1fr; } .zones__txt { grid-column: 1 / -1; } }
 
 /* Contact : bleu nuit, questionnaire court en étapes */
+/* À propos : photo de Nicolas et parcours, juste avant le contact */
+.founder__grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); align-items: center; max-width: 1200px; }
+.founder__photo { width: 100%; max-width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 6px; }
+.founder .h2 { font-size: clamp(32px, 4.4vw, 64px); line-height: 1; margin-bottom: 8px; }
+.founder__txt p { max-width: 60ch; margin-top: 18px; color: var(--mute); }
+@media (max-width: 760px) { .founder__grid { grid-template-columns: 1fr; } .founder__photo { max-width: 300px; } }
 .contact { background: var(--night); color: #EEF1F3; }
 .contact__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 7vw, 120px); align-items: start; }
 .contact .h2 { font-size: clamp(40px, 5.2vw, 84px); }
 .contact__lead { margin-top: 24px; max-width: 40ch; color: rgba(238,241,243,.78); font-size: 17px; }
-.about { margin-top: 28px; max-width: 44ch; color: rgba(238,241,243,.78); }
 .coords { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 6px; font-size: clamp(18px, 1.8vw, 22px); font-weight: 600; }
 .coords a { display: inline-block; padding: 6px 0 2px; }
 .contact .muted { color: rgba(238,241,243,.55); }

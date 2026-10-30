@@ -56,7 +56,13 @@
       "telephone": "+33650539932",
       "founder": {
         "@type": "Person",
-        "name": "Nicolas Laporterie"
+        "name": "Nicolas Laporterie",
+        "jobTitle": "Fondateur et télépilote",
+        "image": "https://www.skynord.fr/assets/nicolas-laporterie.webp",
+        "url": "https://www.skynord.fr/#a-propos",
+        "birthPlace": "Dunkerque",
+        "alumniOf": "SKEMA Business School",
+        "sameAs": ["https://www.linkedin.com/in/nicolas-laporterie"]
       },
       "areaServed": [
         {
@@ -248,6 +254,14 @@
       },
       {
         "@type": "Question",
+        "name": "Qu'est-ce qui est inclus dans le prix ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le tournage, le montage, une musique libre de droits et une série de retouches après la livraison. Vous choisissez le format, horizontal ou vertical, et le film vous est livré monté en 48 h. La durée du film et le déroulé du tournage sont adaptés à votre bien : nous les définissons ensemble au moment du devis."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "Dans quelles villes intervenez-vous ?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -291,7 +305,7 @@
   </script>
 
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=22">
+  <link rel="stylesheet" href="css/style.css?v=23">
 
 </head>
 <body>
@@ -343,7 +357,7 @@
           <h1 class="hero__title display"><span class="mask"><span>Vendez plus vite</span></span><span class="mask"><span>grâce au drone</span></span></h1>
           <p class="hero__lead">Des films aériens et intérieurs qui font visiter un bien avant même la première visite.</p>
           <div class="hero__cta">
-            <button class="btn magnetic" id="autoFly" type="button">Explorer la villa</button>
+            <button class="btn magnetic" id="autoFly" type="button">Lancer la visite</button>
             <span class="hint">ou faites glisser</span>
           </div>
         </div>
@@ -461,13 +475,26 @@
       </div>
     </section>
 
+    <!-- ============ À PROPOS ============ -->
+    <section class="section founder" id="a-propos" aria-labelledby="founder-title">
+      <div class="founder__grid">
+        <img class="founder__photo" src="assets/nicolas-laporterie.webp" width="720" height="960" alt="Nicolas Laporterie, fondateur de Skynord" loading="lazy" decoding="async">
+        <div class="founder__txt">
+          <h2 class="h2 display" id="founder-title">Nicolas, le pilote derrière Skynord</h2>
+          <p>Né à Dunkerque, j'y ai fait toute ma scolarité à Notre-Dame des Dunes, avant de partir à Lille pour mes études supérieures : la prépa ESDHEM, puis le Programme Grande École de SKEMA Business School, intégré sur concours.</p>
+          <p>Mes semestres au Brésil, en Chine et en Afrique du Sud m'ont donné le goût des images aériennes. Vu du ciel, on comprend vraiment un lieu : son échelle, son environnement, la taille d'une montagne ou d'un domaine.</p>
+          <p>J'ai ensuite travaillé pour de grandes maisons du luxe, Paco Rabanne, Lacoste, Saint Laurent puis Hermès. J'y ai appris l'exigence du détail et un niveau de rendu qui ne laisse rien au hasard.</p>
+          <p>Skynord réunit les deux : le regard du drone et la rigueur du luxe, au service de l'immobilier. J'ai choisi de me lancer dans le Nord, la région où j'ai grandi et que je connais par cœur.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ CONTACT ============ -->
     <section class="section contact" id="contact">
       <div class="contact__grid">
         <div class="contact__side">
           <h2 class="h2 display"><span class="mask"><span>Contact</span></span></h2>
           <p class="contact__lead">Cinq questions, moins d'une minute. Je reviens vers vous avec une proposition adaptée à votre bien.</p>
-          <p class="about">Nicolas Laporterie, 24 ans. Deux ans dans le monde du luxe pour apprendre l'exigence de l'image, appliquée aujourd'hui à l'immobilier.</p>
           <ul class="coords">
             <li><a class="ul" href="mailto:Skynord.immo@gmail.com">Skynord.immo@gmail.com</a></li>
             <li><a class="ul" href="tel:+33650539932">06 50 53 99 32</a></li>
@@ -586,6 +613,10 @@
           <p>Le film est livré monté en 48 h après le tournage, prêt à être mis sur l&#x27;annonce et sur les réseaux sociaux.</p>
         </details>
         <details class="faq__item">
+          <summary>Qu&#x27;est-ce qui est inclus dans le prix ?</summary>
+          <p>Le tournage, le montage, une musique libre de droits et une série de retouches après la livraison. Vous choisissez le format, horizontal ou vertical, et le film vous est livré monté en 48 h. La durée du film et le déroulé du tournage sont adaptés à votre bien : nous les définissons ensemble au moment du devis.</p>
+        </details>
+        <details class="faq__item">
           <summary>Dans quelles villes intervenez-vous ?</summary>
           <p>Dans tout le Nord (59) et le Pas-de-Calais (62) : Lille et sa métropole, Roubaix, Tourcoing, Dunkerque, Valenciennes, Douai, Calais, Boulogne-sur-Mer, Le Touquet, Arras, Lens, Béthune, Saint-Omer, Berck… Les autres régions sont possibles sur demande.</p>
         </details>
@@ -627,7 +658,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script type="module" src="js/main.js?v=23"></script>
+  <script type="module" src="js/main.js?v=24"></script>
   <script>
     // Filet de sécurité : l'écran de chargement ne reste jamais bloqué
     setTimeout(function () { var l = document.getElementById('loader'); if (l) l.classList.add('done'); }, 7000);

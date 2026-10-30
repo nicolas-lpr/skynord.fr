@@ -112,7 +112,7 @@ let autoTimer = null;
 function startAuto() { if (!reduced) { stopAuto(); autoTimer = setInterval(() => { if (stageVisible && !document.hidden) next({ user: false }); }, AUTO_S * 1000); } }
 function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
 
-// « Explorer la villa » : visite guidée rapide de tous les espaces, puis arrêt sur le dernier
+// « Lancer la visite » : visite guidée rapide de tous les espaces, puis arrêt sur le dernier
 const TOUR_S = 3;
 let tourTimer = null;
 function startTour() {
